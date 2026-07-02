@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ternakku_app/features/auth/presentation/providers/auth_controller.dart';
+import 'package:ternakku_app/features/auth/presentation/providers/user_controller.dart';
 import '../../domain/models/user_model.dart';
 
 final authProvider = AsyncNotifierProvider<AuthNotifier, UserModel?>(
@@ -10,7 +10,7 @@ class AuthNotifier extends AsyncNotifier<UserModel?> {
   @override
   Future<UserModel?> build() async {
     // Mendelegasikan logika pengambilan profil dan cek token ke AuthController
-    return await ref.read(authControllerProvider).checkAndGetUser();
+    return await ref.read(userControllerProvider).checkAndGetUser();
   }
 
   // Fungsi helper saat OTP sukses (supaya tidak perlu hit API getProfile ulang)

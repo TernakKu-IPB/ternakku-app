@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ternakku_app/features/auth/domain/models/user_model.dart';
 import 'package:ternakku_app/features/auth/presentation/providers/auth_provider.dart';
 import '../../../../core/services/token_service.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -113,21 +112,5 @@ class AuthController {
     ref.invalidate(authProvider);
     
     return response['message'];
-  }
-
-  Future<UserModel?> checkAndGetUser() async {
-    final token = await _tokenService.getAccessToken();
-    
-    if (token == null) {
-      return null;
-    }
-
-    try {
-      return await _repository.getProfile();
-    } catch (e) {
-      // Jika profil gagal diambil (misal token benar-benar mati dan gagal di-refresh)
-      await _tokenService.clearTokens();
-      return null;
-    }
   }
 }
