@@ -88,6 +88,33 @@ class AuthController {
     return response['message'];
   }
 
+  Future<String> forgotPassword(String identifier) async {
+    final response = await _repository.forgotPassword(identifier);
+    return response['message'];
+  }
+
+  Future<String> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final response = await _repository.resetPassword(
+      token: token,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+    
+    final data = response['data'];
+    await _tokenService.saveTokens(
+      accessToken: data['accessToken'],
+      refreshToken: data['refreshToken'],
+    );
+
+    ref.invalidate(authProvider);
+    
+    return response['message'];
+  }
+
   Future<UserModel?> checkAndGetUser() async {
     final token = await _tokenService.getAccessToken();
     

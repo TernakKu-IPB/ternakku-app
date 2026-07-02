@@ -111,6 +111,38 @@ class AuthRepository {
     }
   }
 
+  Future<Map<String, dynamic>> forgotPassword(String identifier) async {
+    try {
+      final response = await _dio.post(
+        ApiConstants.forgotPassword,
+        data: {"identifier": identifier},
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw _parseDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiConstants.resetPassword,
+        data: {
+          "token": token,
+          "newPassword": newPassword,
+          "confirmPassword": confirmPassword,
+        },
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw _parseDioError(e);
+    }
+  }
+
   Future<UserModel> getProfile() async {
     try {
       final response = await _dio.get(ApiConstants.getProfile);
