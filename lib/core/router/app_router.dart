@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ternakku_app/features/auth/presentation/screens/verify_email_screen.dart';
+import 'package:ternakku_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
@@ -43,9 +44,19 @@ final goRouter = Provider<GoRouter>((ref) {
         return null;
       }
 
-      // Skenario 3: Sudah Login & Terverifikasi
-      if (isLogin || isRegister || isVerify) {
-        return '/dashboard'; // Cegah akses ke halaman auth
+      final isOnboarding = state.matchedLocation == '/on-boarding';
+
+      // Skenario 3: Sudah Terverifikasi, tapi Belum Punya Peternakan
+      if (user.isVerified && !user.hasFarm) {
+        if (!isOnboarding) {
+          return '/on-boarding';
+        }
+        return null;
+      }
+
+      // Skenario 4: Sudah Punya Peternakan (Selesai Onboarding)
+      if (isLogin || isRegister || isVerify || isOnboarding) {
+        return '/dashboard'; 
       }
 
       return null;
@@ -64,6 +75,7 @@ final goRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/dashboard', builder: (context, state) => const DashboardScreen()),
+      GoRoute(path: '/on-boarding', builder: (context, state) => const OnboardingScreen()),
     ],
   );
 });

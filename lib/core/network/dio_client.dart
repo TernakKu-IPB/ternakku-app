@@ -30,43 +30,57 @@ final dioProvider = Provider<Dio>((ref) {
       
       // 2. Jika terjadi error (khususnya 401 Unauthorized / Token Expired)
       onError: (DioException e, handler) async {
-        if (e.response?.statusCode == 401) {
-          final refreshToken = await tokenService.getRefreshToken();
-          
-          if (refreshToken != null) {
-            try {
-              // Coba perbarui token
-              final refreshDio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
-              final response = await refreshDio.post(
-                ApiConstants.refresh,
-                data: {'refreshToken': refreshToken},
-              );
-              
-              // Simpan token baru
-              final newAccessToken = response.data['data']['accessToken'];
-              final newRefreshToken = response.data['data']['refreshToken'];
-              await tokenService.saveTokens(
-                accessToken: newAccessToken, 
-                refreshToken: newRefreshToken,
-              );
-              
-              // Ulangi request yang gagal tadi dengan token baru
-              e.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-              final retryResponse = await dio.fetch(e.requestOptions);
-              return handler.resolve(retryResponse);
-              
-            } catch (refreshError) {
-              // 1. Hapus token lokal karena sudah benar-benar kedaluwarsa
-              await tokenService.clearTokens();
-              
-              // 2. Reload state user
-              ref.invalidate(authProvider);
-              
-              return handler.reject(e); // Reject request asli
-            }
-          }
+        if (e.response?.statusCode != 401) {
+          return handler.next(e);
         }
-        return handler.next(e);
+
+        final refreshToken = await tokenService.getRefreshToken();
+        if (refreshToken == null) {
+          await tokenService.clearTokens();
+          ref.invalidate(authProvider);
+          return handler.next(e);
+        }
+
+        try {
+          // Refresh access token
+          final refreshDio = Dio(
+            BaseOptions(baseUrl: ApiConstants.baseUrl),
+          );
+
+          final response = await refreshDio.post(
+            ApiConstants.refresh,
+            data: {
+              'refreshToken': refreshToken,
+            },
+          );
+
+          final newAccessToken = response.data['data']['accessToken'];
+          final newRefreshToken = response.data['data']['refreshToken'];
+
+          await tokenService.saveTokens(
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          );
+
+          // Retry request
+          final requestOptions = e.requestOptions;
+          requestOptions.headers['Authorization'] =
+              'Bearer $newAccessToken';
+
+          try {
+            final retryResponse = await dio.fetch(requestOptions);
+            return handler.resolve(retryResponse);
+          } on DioException catch (retryError) {
+            // 409, 422, 400, dll.
+            return handler.reject(retryError);
+          }
+        } on DioException {
+          // Refresh token memang gagal
+          await tokenService.clearTokens();
+          ref.invalidate(authProvider);
+
+          return handler.next(e);
+        }
       },
     ),
   );

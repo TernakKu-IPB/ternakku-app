@@ -7,6 +7,7 @@ class UserModel {
   final DateTime? birthDate;
   final String? gender;
   final bool isVerified;
+  final bool hasFarm;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     this.birthDate,
     this.gender,
     required this.isVerified,
+    required this.hasFarm,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class UserModel {
       birthDate: json['birthDate'] != null ? DateTime.parse(json['birthDate']) : null,
       gender: json['gender'],
       isVerified: json['isVerified'] ?? false,
+      hasFarm: json['hasFarm'] ?? false,
     );
   }
 
@@ -42,6 +45,7 @@ class UserModel {
     DateTime? birthDate,
     String? gender,
     bool? isVerified,
+    bool? hasFarm,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -52,6 +56,7 @@ class UserModel {
       birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
       isVerified: isVerified ?? this.isVerified,
+      hasFarm: hasFarm ?? this.hasFarm,
     );
   }
 }

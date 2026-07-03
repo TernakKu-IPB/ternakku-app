@@ -1,0 +1,5017 @@
+{
+  "info": {
+    "_postman_id": "f3f64a6e-c14c-495a-9a55-54ec441bfe5e",
+    "name": "User",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53579790",
+    "_collection_link": "https://go.postman.co/collection/53579790-f3f64a6e-c14c-495a-9a55-54ec441bfe5e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"access_token\",\r",
+                  "    response.data.accessToken\r",
+                  ");\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"refresh_token\",\r",
+                  "    response.data.refreshToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"asdcode123@gmail.com\",\r\n    \"password\": \"1234@Qw1234\",\r\n    \"confirmPassword\": \"1234@Qw1234\",\r\n    \"username\": \"asdcode123\",\r\n    \"fullName\": \"Ahmad Subhan Daryhadi\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/register",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"asdcode123@gmail.com\",\r\n    \"password\": \"1234@Qw1234\",\r\n    \"confirmPassword\": \"1234@Qw1234\",\r\n    \"username\": \"asdcode123\",\r\n    \"fullName\": \"Ahmad Subhan Daryhadi\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/register",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "494"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ee-kw5FVoirWjquUhMfqwjD3aQLNDo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:09:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Pendaftaran akun berhasil. Kode OTP telah dikirim ke email Anda\",\n    \"data\": {\n        \"accessToken\": \"{{json_web_token}}\",\n        \"refreshToken\": \"{{json_web_token}}\",\n        \"isVerified\": false\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"access_token\",\r",
+                  "    response.data.accessToken\r",
+                  ");\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"refresh_token\",\r",
+                  "    response.data.refreshToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"asdcode123@gmail.com\",\r\n    \"password\": \"1234@Qw1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identifier\": \"asdcode123@gmail.com\",\r\n    \"password\": \"1234@Qw1234\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/login",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "471"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1d7-3DiEcDQthEX0MKaCL7Zo/6nR3AY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:16:00 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Berhasil masuk. Akun belum terverifikasi\",\n    \"data\": {\n        \"accessToken\": \"{{json_web_token}}\",\n        \"refreshToken\": \"{{json_web_token}}\",\n        \"isVerified\": false\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"access_token\",\r",
+                  "    response.data.accessToken\r",
+                  ");\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"refresh_token\",\r",
+                  "    response.data.refreshToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"refreshToken\": \"{{refresh_token}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/refresh",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"refreshToken\": \"{{json_web_token}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/refresh",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "455"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1c7-k7r0GCvGbRCsTQ6Xukhlsu5mHGw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:21:13 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Sesi berhasil diperbarui\",\n    \"data\": {\n        \"accessToken\": \"{{json_web_token}}\",\n        \"refreshToken\": \"{{json_web_token}}\",\n        \"isVerified\": false\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/logout",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/logout",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "58"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3a-0TC4Ai6Wxdgn9vmVqS2bN4ED4Yc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:25:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Berhasil keluar\",\n    \"data\": true,\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Email Verifiication",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"otpCode\": \"633367\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/verify-email",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"otpCode\": \"638867\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/verify-email",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "verify-email"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "85"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"55-ikEW5aHSbblIArQP26acTJqG1C8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:34:42 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Email berhasil diverifikasi\",\n    \"data\": {\n        \"isVerified\": true\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Resend Verification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/resend-verification",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "resend-verification"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/resend-verification",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "resend-verification"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "123"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7b-f5SmQ36IrrJR2eZgIvEwyY/q2rY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:35:27 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Kode OTP telah dikirim ulang ke as*******3@gmail.com\",\n    \"data\": {\n        \"email\": \"as*******3@gmail.com\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"asdcode123@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/forgot-password",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identifier\": \"asdcode123@gmail.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/forgot-password",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "forgot-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "161"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a1-3fbbZdeVFQQkCErJqc3WY6X7q2U\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:38:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Tautan atur ulang kata sandi telah dikirim ke as*******3@gmail.com\",\n    \"data\": {\n        \"email\": \"as*******3@gmail.com\",\n        \"username\": \"as*******3\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"access_token\",\r",
+                  "    response.data.accessToken\r",
+                  ");\r",
+                  "\r",
+                  "pm.environment.set(\r",
+                  "    \"refresh_token\",\r",
+                  "    response.data.refreshToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"{{reset_password_token}}\",\r\n    \"newPassword\": \"4321@Qw4321\",\r\n    \"confirmPassword\": \"4321@Qw4321\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/auth/reset-password",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"token\": \"{{reset_password_token}}\",\r\n    \"newPassword\": \"4321@Qw4321\",\r\n    \"confirmPassword\": \"4321@Qw4321\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/auth/reset-password",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "462"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ce-SZpwYblG7xe8rCn7Y60J1e9Wc1g\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 13:44:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Kata sandi berhasil diatur ulang\",\n    \"data\": {\n        \"accessToken\": \"{{json_web_token}}\",\n        \"refreshToken\": \"{{json_web_token}}\",\n        \"isVerified\": true\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/users/me",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/users/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "users",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "303"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"12f-/K+qZ4K5W9vg4+nGI+geaplchBM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 23:27:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Profil berhasil diambil\",\n    \"data\": {\n        \"id\": 6,\n        \"username\": \"asdcode123\",\n        \"email\": \"asdcode123@gmail.com\",\n        \"fullName\": \"Ahmad Subhan Daryhadi\",\n        \"picture\": null,\n        \"birthDate\": null,\n        \"gender\": null,\n        \"isVerified\": false,\n        \"updatedAt\": \"2026-06-28T23:26:58.808Z\",\n        \"createdAt\": \"2026-06-28T23:26:54.976Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fullName\": \"Ahmad Subhan\",\r\n    \"gender\": \"male\",\r\n    \"birthDate\": \"2003-10-02\",\r\n    \"picture\": \"http://localhost:3000\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/users/me",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"Ahmad Subhan\",\r\n    \"gender\": \"male\",\r\n    \"birthDate\": \"2003-10-02\",\r\n    \"picture\": \"http://localhost:3000\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/users/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "users",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "326"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"146-ArvBXQy3So3cTa1bEMbQdHeVBE4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 28 Jun 2026 23:59:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Profil berhasil diperbarui\",\n    \"data\": {\n        \"id\": 6,\n        \"username\": \"asdcode123\",\n        \"email\": \"asdcode123@gmail.com\",\n        \"fullName\": \"Ahmad Subhan\",\n        \"picture\": \"http://localhost:3000\",\n        \"birthDate\": \"2003-10-02\",\n        \"gender\": \"male\",\n        \"isVerified\": false,\n        \"updatedAt\": \"2026-06-28T23:59:15.034Z\",\n        \"createdAt\": \"2026-06-28T23:26:54.976Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Farm",
+      "item": [
+        {
+          "name": "Get My Farm",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/farms/me",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "farms",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/farms/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "farms",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "327"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"147-4jXbs9T9Qcl60dTF5Jf6peaXMug\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 02:26:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Data peternakan berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"userId\": 6,\n        \"name\": \"Peternakan IPB\",\n        \"address\": \"Jl. Raya Dramaga\",\n        \"latitude\": -6.5599125,\n        \"longitude\": 106.7255118,\n        \"description\": \"Peternakan yang dikelola oleh mahasiswa IPB\",\n        \"createdAt\": \"2026-06-29T01:16:24.078Z\",\n        \"updatedAt\": \"2026-06-29T01:18:09.729Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create or Update My Farm",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Peternakan IPB\",\r\n    \"address\": \"Jl. Raya Dramaga\",\r\n    \"latitude\": -6.5599125,\r\n    \"longitude\": 106.7255118,\r\n    \"description\": \"Peternakan yang dikelola oleh mahasiswa IPB\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/farms/me",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "farms",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Peternakan IPB\",\r\n    \"address\": \"Jl. Raya Dramaga\",\r\n    \"latitude\": -6.5599125,\r\n    \"longitude\": 106.7255118,\r\n    \"description\": \"Peternakan yang dikelola oleh mahasiswa IPB\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/farms/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "farms",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "332"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"14c-rLaGKmSsHGlxYO1dH4d7+h0YgeE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 01:18:09 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Profil peternakan berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"userId\": 6,\n        \"name\": \"Peternakan IPB\",\n        \"address\": \"Jl. Raya Dramaga\",\n        \"latitude\": -6.5599125,\n        \"longitude\": 106.7255118,\n        \"description\": \"Peternakan yang dikelola oleh mahasiswa IPB\",\n        \"createdAt\": \"2026-06-29T01:16:24.078Z\",\n        \"updatedAt\": \"2026-06-29T01:18:09.729Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Animal Type",
+      "item": [
+        {
+          "name": "Get Templates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types/templates?limit=2&offset=0&q=sapi",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types",
+                "templates"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "sapi"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types/templates?limit=2&offset=0",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types",
+                    "templates"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "sapi",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "483"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1e3-lSejBEH4BSgDzKQeVxXHTzD82qQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 23:53:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Template jenis hewan berhasil diambil\",\n    \"data\": {\n        \"animalTypes\": [\n            {\n                \"id\": 7,\n                \"farmId\": null,\n                \"code\": \"kambing-etawa\",\n                \"label\": \"Kambing Etawa\",\n                \"createdAt\": \"2026-06-30T23:51:22.615Z\",\n                \"updatedAt\": \"2026-06-30T23:51:22.615Z\"\n            },\n            {\n                \"id\": 5,\n                \"farmId\": null,\n                \"code\": \"sapi-limousin\",\n                \"label\": \"Sapi Limousin\",\n                \"createdAt\": \"2026-06-30T23:51:00.696Z\",\n                \"updatedAt\": \"2026-06-30T23:51:00.696Z\"\n            }\n        ],\n        \"paging\": {\n            \"prev\": null,\n            \"next\": \"http://localhost:3000/animal-types/templates?limit=2&offset=2\"\n        }\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Check Code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types/check-code?code=sapi-bali",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types",
+                "check-code"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "sapi-bali"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types/check-code?code=sapi-bali",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types",
+                    "check-code"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "sapi-bali"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5a-nwTc4jJj/qjHXht0m7ECnoxK2Y4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 02:57:42 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Kode sapi-bali sudah ada\",\n    \"data\": {\n        \"isAvailable\": false\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types?limit=1&offset=0&q=sapi",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "1"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "sapi"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types?limit=1&offset=0&q=sapi",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "sapi"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "310"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"136-yZN0FcZHOTJtY9pTVvCL0NZCeKI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 03:16:02 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Data jenis hewan berhasil diambil\",\n    \"data\": {\n        \"animalTypes\": [\n            {\n                \"id\": 3,\n                \"farmId\": 1,\n                \"code\": \"sapi-bali\",\n                \"label\": \"Sapi Bali\",\n                \"createdAt\": \"2026-06-29T02:54:42.479Z\",\n                \"updatedAt\": \"2026-06-29T02:54:42.479Z\"\n            }\n        ],\n        \"paging\": {\n            \"prev\": null,\n            \"next\": \"http://localhost:3000/animal-types?limit=1&offset=1\"\n        }\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "210"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d2-RyrFyD843Dj0/QMJnXk7HriuGGQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 23:27:24 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Detail jenis hewan berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sapi-bali\",\n        \"label\": \"Sapi Bali\",\n        \"createdAt\": \"2026-06-29T05:23:24.855Z\",\n        \"updatedAt\": \"2026-06-29T05:23:24.855Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"sapi-bali\",\r\n    \"label\": \"Sapi Bali\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"sapi-perah\",\r\n    \"label\": \"Sapi Perah\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "209"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d1-EtwIufsUDdQ5GDS7NiAPcYHyDUg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 02:19:22 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Jenis hewan berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sapi-perah\",\n        \"label\": \"Sapi Perah\",\n        \"createdAt\": \"2026-06-29T02:19:22.538Z\",\n        \"updatedAt\": \"2026-06-29T02:19:22.538Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"code\": \"sapi-perah\",\r\n    \"label\": \"Sapi Perah Baru\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    // \"code\": \"sapi-perah\",\r\n    \"label\": \"Sapi Perah Baru\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "213"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d5-xfY5sUYCTiUyV6q5Ptgdmxt6JGs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 02:29:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Jenis hewan berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sapi-perah\",\n        \"label\": \"Sapi Perah Baru\",\n        \"createdAt\": \"2026-06-29T02:19:22.538Z\",\n        \"updatedAt\": \"2026-06-29T02:29:03.749Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/animal-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "animal-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/animal-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "animal-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "74"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4a-w0UwpEkbUTGlLndvndI1IRTMe/0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 02:30:35 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Tipe hewan berhasil dihapus\",\n    \"data\": {\n        \"id\": 1\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Condition Type",
+      "item": [
+        {
+          "name": "Get Templates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types/templates?limit=2&offset=0",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types",
+                "templates"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "s",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types/templates?limit=2&offset=0",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types",
+                    "templates"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "s",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "374"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"176-Ge0EJWesR8PHdrSiRBlIMbgx9CM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 23:55:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Template jenis kondisi berhasil diambil\",\n    \"data\": {\n        \"conditionTypes\": [\n            {\n                \"id\": 4,\n                \"farmId\": null,\n                \"code\": \"mati\",\n                \"label\": \"mati\",\n                \"createdAt\": \"2026-06-30T23:51:52.784Z\",\n                \"updatedAt\": \"2026-06-30T23:51:52.784Z\"\n            },\n            {\n                \"id\": 3,\n                \"farmId\": null,\n                \"code\": \"sakit\",\n                \"label\": \"Sakit\",\n                \"createdAt\": \"2026-06-30T23:51:43.840Z\",\n                \"updatedAt\": \"2026-06-30T23:51:43.840Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Check Code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types/check-code?code=sehat",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types",
+                "check-code"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "sehat"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types/check-code?code=sehat",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types",
+                    "check-code"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "sehat"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "79"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4f-Mb58rCE7SScSO7+CFlaki9Lb9uU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:02:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Kode sehat belum ada\",\n    \"data\": {\n        \"isAvailable\": true\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types?limit=1&offset=0&q=sehat",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "1"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "sehat"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types?limit=1&offset=0&q=sehat",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "sehat"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "237"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ed-4DlFUashWaw6x8BHRfJa4S5NS1g\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:05:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data jenis kondisi berhasil diambil\",\n    \"data\": {\n        \"conditionTypes\": [\n            {\n                \"id\": 2,\n                \"farmId\": 1,\n                \"code\": \"sehat\",\n                \"label\": \"sehat\",\n                \"createdAt\": \"2026-06-29T04:05:30.296Z\",\n                \"updatedAt\": \"2026-06-29T04:05:30.296Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "204"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"cc-5MZQSIPEcD7PM6ixuyYegjyfMrc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 23:28:43 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Detail jenis kondisi berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sehat\",\n        \"label\": \"sehat\",\n        \"createdAt\": \"2026-06-29T05:23:36.051Z\",\n        \"updatedAt\": \"2026-06-29T05:23:36.051Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"sehat\",\r\n    \"label\": \"sehat\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"sakit\",\r\n    \"label\": \"Sakit\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "201"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"c9-imE5DD0VJ17RDbPr85AxkMtXyOY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:01:35 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Jenis kondisi berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sakit\",\n        \"label\": \"Sakit\",\n        \"createdAt\": \"2026-06-29T04:01:35.014Z\",\n        \"updatedAt\": \"2026-06-29T04:01:35.014Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"sick\",\r\n    \"label\": \"Sakit\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"sick\",\r\n    \"label\": \"Sakit\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "199"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"c7-kmCPA62BFBLWN66O4yxN+iHGnH8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:03:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Jenis kondisi berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"sick\",\n        \"label\": \"Sakit\",\n        \"createdAt\": \"2026-06-29T04:01:35.014Z\",\n        \"updatedAt\": \"2026-06-29T04:03:30.992Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-types/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-types",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-types/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-types",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-cc5kIksPNoe+uRGI0W/2H6xogjI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:06:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Jenis kondisi berhasil dihapus\",\n    \"data\": {\n        \"id\": 1\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vaccine",
+      "item": [
+        {
+          "name": "Get Templates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines/templates?limit=2&offset=0&q=s",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines",
+                "templates"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "s"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines/templates?limit=2&offset=0&q=s",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines",
+                    "templates"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "s"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "508"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1fc-bcKjRE8dVsApeXA530SvJuAzfT4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 23:56:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Template vaksin berhasil diambil\",\n    \"data\": {\n        \"vaccines\": [\n            {\n                \"id\": 4,\n                \"farmId\": null,\n                \"code\": \"fmd\",\n                \"name\": \"Foot and Mouth Disease\",\n                \"description\": null,\n                \"createdAt\": \"2026-06-30T23:52:51.955Z\",\n                \"updatedAt\": \"2026-06-30T23:52:51.955Z\"\n            },\n            {\n                \"id\": 5,\n                \"farmId\": null,\n                \"code\": \"hs\",\n                \"name\": \"Hemorrhagic Septicemia\",\n                \"description\": null,\n                \"createdAt\": \"2026-06-30T23:53:03.746Z\",\n                \"updatedAt\": \"2026-06-30T23:53:03.746Z\"\n            }\n        ],\n        \"paging\": {\n            \"prev\": null,\n            \"next\": \"http://localhost:3000/vaccines/templates?q=s&limit=2&offset=2\"\n        }\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Check Code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines/check-code?code=pmk",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines",
+                "check-code"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "pmk"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines/check-code?code=pmk",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines",
+                    "check-code"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "pmk"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "78"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4e-y92fjj2UUtpoHA848YD5mKopEPQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:11:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Kode pmk sudah ada\",\n    \"data\": {\n        \"isAvailable\": false\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines?limit=1&offset=0&q=sd",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "1"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "sd"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines?limit=1&offset=0&q=sd",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "sd"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "253"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fd-st+W4bU7BkufzWJcS4IVv1835JI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:12:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data vaksin berhasil diambil\",\n    \"data\": {\n        \"vaccines\": [\n            {\n                \"id\": 3,\n                \"farmId\": 1,\n                \"code\": \"lsd\",\n                \"name\": \"Lumpy Skin Disease\",\n                \"description\": null,\n                \"createdAt\": \"2026-06-29T04:12:07.698Z\",\n                \"updatedAt\": \"2026-06-29T04:12:07.698Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "226"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"e2-wVlGtO54Mpg2oUIHeXgWZ5lRqXQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 23:31:35 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Detail vaksin berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"lsd\",\n        \"name\": \"Lumpy Skin Disease\",\n        \"description\": null,\n        \"createdAt\": \"2026-06-29T05:23:50.695Z\",\n        \"updatedAt\": \"2026-06-29T05:23:50.695Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"lsd\",\r\n    \"name\": \"Lumpy Skin Disease\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"pmk\",\r\n    \"name\": \"Penyakit Mulut dan Kuku (PMK)\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "234"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ea-SIW4FNweDmirIg/wKLokXrfMnUw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:09:58 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Vaksin berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"pmk\",\n        \"name\": \"Penyakit Mulut dan Kuku (PMK)\",\n        \"description\": null,\n        \"createdAt\": \"2026-06-29T04:09:58.275Z\",\n        \"updatedAt\": \"2026-06-29T04:09:58.275Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"pmk\",\r\n    \"name\": \"Penyakit Mulut Kuku (PMK)\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"pmk\",\r\n    \"name\": \"Penyakit Mulut Kuku (PMK)\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "229"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"e5-PSgpTbIpD1OALeNYZHZT95tlT7w\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:10:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Vaksin berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"farmId\": 1,\n        \"code\": \"pmk\",\n        \"name\": \"Penyakit Mulut Kuku (PMK)\",\n        \"description\": null,\n        \"createdAt\": \"2026-06-29T04:09:58.275Z\",\n        \"updatedAt\": \"2026-06-29T04:10:33.104Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccines/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccines",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccines/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccines",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "70"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"46-Aj1b1T6C1Fz+IGGYXB8x+8lNpJ8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 04:11:02 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Vaksin berhasil dihapus\",\n    \"data\": {\n        \"id\": 1\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Livestock",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/livestocks?limit=10&offset=0&q=limoo&status=active",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "livestocks"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "q",
+                  "value": "limoo"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/livestocks?limit=10&offset=0&q=limoo&status=active",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "livestocks"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "q",
+                      "value": "limoo"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "619"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"26b-VniuvJbdO/oJ8EtPNFd5RjK3N6Y\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 07:09:08 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data ternak berhasil diambil\",\n    \"data\": {\n        \"livestocks\": [\n            {\n                \"id\": 4,\n                \"farmId\": 1,\n                \"tagId\": \"ET-000003\",\n                \"name\": \"Limookid\",\n                \"picture\": null,\n                \"animalTypeId\": 1,\n                \"gender\": \"female\",\n                \"birthDate\": \"2026-06-29\",\n                \"status\": \"active\",\n                \"fatherId\": null,\n                \"motherId\": 3,\n                \"createdAt\": \"2026-06-29T07:02:04.906Z\",\n                \"updatedAt\": \"2026-06-29T07:02:04.906Z\"\n            },\n            {\n                \"id\": 3,\n                \"farmId\": 1,\n                \"tagId\": \"ET-000002\",\n                \"name\": \"Limooonah\",\n                \"picture\": null,\n                \"animalTypeId\": 1,\n                \"gender\": \"female\",\n                \"birthDate\": \"Invalid Date\",\n                \"status\": \"active\",\n                \"fatherId\": null,\n                \"motherId\": null,\n                \"createdAt\": \"2026-06-29T07:01:14.695Z\",\n                \"updatedAt\": \"2026-06-29T07:01:14.695Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/livestocks/4",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "livestocks",
+                "4"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/livestocks/4",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "livestocks",
+                    "4"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "331"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"14b-wBbhz0/Yisd6e9OgE59CI1Ef+P4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 07:27:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Detail data ternak berhasil diambil\",\n    \"data\": {\n        \"id\": 4,\n        \"farmId\": 1,\n        \"tagId\": \"ET-000003\",\n        \"name\": \"Limookid\",\n        \"picture\": null,\n        \"animalTypeId\": 1,\n        \"gender\": \"female\",\n        \"birthDate\": \"2026-06-29\",\n        \"status\": \"active\",\n        \"fatherId\": null,\n        \"motherId\": 3,\n        \"createdAt\": \"2026-06-29T07:02:04.906Z\",\n        \"updatedAt\": \"2026-06-29T07:02:04.906Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tagId\": \"ET-000003\",\r\n    \"name\": \"Limookid\",\r\n    \"picture\": \"\",\r\n    \"animalTypeId\": 1,\r\n    \"gender\": \"female\",\r\n    \"birthDate\": \"2026-06-29\",\r\n    \"status\": \"active\",\r\n    \"fatherId\": 2,\r\n    \"motherId\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/livestocks",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "livestocks"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tagId\": \"ET-000003\",\r\n    \"name\": \"Limookid\",\r\n    \"picture\": \"\",\r\n    \"animalTypeId\": 1,\r\n    \"gender\": \"female\",\r\n    \"birthDate\": \"2026-06-29\",\r\n    \"status\": \"active\",\r\n    \"fatherId\": 2,\r\n    \"motherId\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/livestocks",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "livestocks"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "325"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"145-64aVKyTJv2qwiJLSMMLJVl4+1d8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 07:02:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data ternak berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 4,\n        \"farmId\": 1,\n        \"tagId\": \"ET-000003\",\n        \"name\": \"Limookid\",\n        \"picture\": null,\n        \"animalTypeId\": 1,\n        \"gender\": \"female\",\n        \"birthDate\": \"2026-06-29\",\n        \"status\": \"active\",\n        \"fatherId\": 2,\n        \"motherId\": 3,\n        \"createdAt\": \"2026-06-29T07:02:04.906Z\",\n        \"updatedAt\": \"2026-06-29T07:02:04.906Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tagId\": \"ET-000001\",\r\n    \"name\": \"Limooboy\",\r\n    \"picture\": \"\",\r\n    \"animalTypeId\": 1,\r\n    \"gender\": \"male\",\r\n    \"birthDate\": \"2026-06-29\",\r\n    \"status\": \"active\",\r\n    \"fatherId\": null,\r\n    \"motherId\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/livestocks/3",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "livestocks",
+                "3"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tagId\": \"ET-000001\",\r\n    \"name\": \"Limooboy\",\r\n    \"picture\": \"\",\r\n    \"animalTypeId\": 1,\r\n    \"gender\": \"male\",\r\n    \"birthDate\": \"2026-06-29\",\r\n    \"status\": \"active\",\r\n    \"fatherId\": null,\r\n    \"motherId\": null\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/livestocks/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "livestocks",
+                    "2"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "328"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"148-zG6SmF/iWecQivev2vHxewBBiYg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 07:04:52 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data ternak berhasil diperbarui\",\n    \"data\": {\n        \"id\": 2,\n        \"farmId\": 1,\n        \"tagId\": \"ET-000001\",\n        \"name\": \"Limooboy\",\n        \"picture\": null,\n        \"animalTypeId\": 1,\n        \"gender\": \"male\",\n        \"birthDate\": \"2026-06-29\",\n        \"status\": \"active\",\n        \"fatherId\": null,\n        \"motherId\": null,\n        \"createdAt\": \"2026-06-29T07:00:20.024Z\",\n        \"updatedAt\": \"2026-06-29T07:04:52.849Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/livestocks/2",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "livestocks",
+                "2"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/livestocks/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "livestocks",
+                    "2"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "75"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4b-6CGQsV/fW/2AjyolwibDn1IugOU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 07:05:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Data ternak berhasil dihapus\",\n    \"data\": {\n        \"id\": 2\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Condition History",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-histories?limit=10&offset=0&livestockId=4",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-histories"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "livestockId",
+                  "value": "4"
+                },
+                {
+                  "key": "conditionTypeId",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-histories?limit=10&offset=0&livestockId=4",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-histories"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "livestockId",
+                      "value": "4"
+                    },
+                    {
+                      "key": "conditionTypeId",
+                      "value": "1",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "493"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ed-p2T1lD+VpOXsqnu4Drr6m7CRAsg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 00:57:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat kondisi ternak berhasil diambil\",\n    \"data\": {\n        \"conditionHistories\": [\n            {\n                \"id\": 1,\n                \"livestockId\": 4,\n                \"conditionTypeId\": 1,\n                \"recordDate\": \"2026-06-30\",\n                \"notes\": \"Hari ini dan seterusnya ternak sehat\",\n                \"createdAt\": \"2026-06-30T00:52:44.210Z\",\n                \"updatedAt\": \"2026-06-30T00:54:41.382Z\"\n            },\n            {\n                \"id\": 2,\n                \"livestockId\": 4,\n                \"conditionTypeId\": 1,\n                \"recordDate\": \"2026-06-29\",\n                \"notes\": \"Hari ini ternak sehat\",\n                \"createdAt\": \"2026-06-30T00:57:31.227Z\",\n                \"updatedAt\": \"2026-06-30T00:57:31.227Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-histories/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-histories",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-histories/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-histories",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "305"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"131-TWb9DgYT2DkmTg7cIZfMkqiYqOw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 00:55:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Detail riwayat kondisi ternak berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"conditionTypeId\": 1,\n        \"recordDate\": \"2026-06-30\",\n        \"notes\": \"Hari ini dan seterusnya ternak sehat\",\n        \"createdAt\": \"2026-06-30T00:52:44.210Z\",\n        \"updatedAt\": \"2026-06-30T00:54:41.382Z\",\n        \"livestock\": {\n            \"farmId\": 1\n        }\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livestockId\": 4,\r\n    \"conditionTypeId\": 1,\r\n    \"recordDate\": \"2026-06-29\",\r\n    \"notes\": \"Hari ini ternak sehat\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-histories",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-histories"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"livestockId\": 4,\r\n    \"conditionTypeId\": 1,\r\n    \"recordDate\": \"2026-06-30\",\r\n    \"notes\": \"Hari ini ternak sehat\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-histories",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-histories"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "262"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"106-PDDUGEp6l+ikVQqFEXkoOeVIE+s\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 00:52:44 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat kondisi ternak berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"conditionTypeId\": 1,\n        \"recordDate\": \"2026-06-30\",\n        \"notes\": \"Hari ini ternak sehat\",\n        \"createdAt\": \"2026-06-30T00:52:44.210Z\",\n        \"updatedAt\": \"2026-06-30T00:52:44.210Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livestockId\": 4,\r\n    \"conditionTypeId\": 1,\r\n    \"recordDate\": \"2026-06-30\",\r\n    \"notes\": \"Hari ini dan seterusnya ternak sehat\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-histories/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-histories",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"livestockId\": 4,\r\n    \"conditionTypeId\": 1,\r\n    \"recordDate\": \"2026-06-30\",\r\n    \"notes\": \"Hari ini dan seterusnya ternak sehat\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-histories/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-histories",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "276"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"114-NegJ816W8zWKQsvoCKknJtaXEYc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 00:54:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat kondisi ternak berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"conditionTypeId\": 1,\n        \"recordDate\": \"2026-06-30\",\n        \"notes\": \"Hari ini dan seterusnya ternak sehat\",\n        \"createdAt\": \"2026-06-30T00:52:44.210Z\",\n        \"updatedAt\": \"2026-06-30T00:54:41.382Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/condition-histories/2",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "condition-histories",
+                "2"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/condition-histories/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "condition-histories",
+                    "2"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "86"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"56-WxCnGUYzHAS12uHbzQYRrinPrFI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 00:58:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat kondisi ternak berhasil dihapus\",\n    \"data\": {\n        \"id\": 2\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vaccination History",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccination-histories?limit=10&offset=0&isVaccinated=true",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccination-histories"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "livestockId",
+                  "value": "4",
+                  "disabled": true
+                },
+                {
+                  "key": "vaccineId",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "isVaccinated",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccination-histories?limit=10&offset=0&isVaccinated=true",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccination-histories"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "livestockId",
+                      "value": "4",
+                      "disabled": true
+                    },
+                    {
+                      "key": "vaccineId",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "isVaccinated",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "595"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"253-B6NY6kDKWIv3ieyK8uaEFoTXDrI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 01:55:11 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat vaksinasi berhasil diambil\",\n    \"data\": {\n        \"vaccinationHistories\": [\n            {\n                \"id\": 1,\n                \"livestockId\": 4,\n                \"vaccineId\": 1,\n                \"isVaccinated\": true,\n                \"vaccinationDate\": \"2026-06-29\",\n                \"batchNumber\": \"LSV25040101\",\n                \"notes\": \"Vaksin Lumpy Skin Disease hari ini\",\n                \"createdAt\": \"2026-06-30T01:50:49.415Z\",\n                \"updatedAt\": \"2026-06-30T01:54:49.280Z\"\n            },\n            {\n                \"id\": 2,\n                \"livestockId\": 3,\n                \"vaccineId\": 1,\n                \"isVaccinated\": true,\n                \"vaccinationDate\": \"2026-06-29\",\n                \"batchNumber\": \"LSV25040101\",\n                \"notes\": \"Vaksin Lumpy Skin Disease hari ini\",\n                \"createdAt\": \"2026-06-30T01:53:08.843Z\",\n                \"updatedAt\": \"2026-06-30T01:53:08.843Z\"\n            }\n        ],\n        \"paging\": null\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccination-histories/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccination-histories",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccination-histories/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccination-histories",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "346"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"15a-dxHWoCHDOP5/2c21tUx/PFZRQE8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 01:53:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Detail riwayat vaksinasi berhasil diambil\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"vaccineId\": 1,\n        \"isVaccinated\": false,\n        \"vaccinationDate\": \"2026-07-01\",\n        \"batchNumber\": \"LSV25040101\",\n        \"notes\": \"Vaksin Lumpy Skin Disease hari ini\",\n        \"createdAt\": \"2026-06-30T01:50:49.415Z\",\n        \"updatedAt\": \"2026-06-30T01:52:07.873Z\",\n        \"livestock\": {\n            \"farmId\": 1\n        }\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livestockId\": 3,\r\n    \"vaccineId\": 1,\r\n    \"isVaccinated\": true,\r\n    \"vaccinationDate\": \"2026-06-29\",\r\n    \"batchNumber\": \"LSV25040101\",\r\n    \"notes\": \"Vaksin Lumpy Skin Disease hari ini\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccination-histories",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccination-histories"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"livestockId\": 4,\r\n    \"vaccineId\": 1,\r\n    \"isVaccinated\": true,\r\n    \"vaccinationDate\": \"2026-06-29\",\r\n    \"batchNumber\": \"LSV25040101\",\r\n    \"notes\": \"Vaksin Lumpy Skin Disease hari ini\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccination-histories",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccination-histories"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "317"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"13d-m93Ezip7e4RLzcu4IB0thdq8UAU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 01:50:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat vaksinasi berhasil ditambahkan\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"vaccineId\": 1,\n        \"isVaccinated\": true,\n        \"vaccinationDate\": \"2026-06-29\",\n        \"batchNumber\": \"LSV25040101\",\n        \"notes\": \"Vaksin Lumpy Skin Disease hari ini\",\n        \"createdAt\": \"2026-06-30T01:50:49.415Z\",\n        \"updatedAt\": \"2026-06-30T01:50:49.415Z\"\n    },\n    \"statusCode\": 201\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livestockId\": 4,\r\n    \"vaccineId\": 1,\r\n    \"isVaccinated\": false,\r\n    \"vaccinationDate\": \"2026-07-01\",\r\n    \"batchNumber\": \"LSV25040101\",\r\n    \"notes\": \"Vaksin Lumpy Skin Disease hari ini\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccination-histories/1",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccination-histories",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"livestockId\": 4,\r\n    \"vaccineId\": 1,\r\n    \"isVaccinated\": false,\r\n    \"vaccinationDate\": \"2026-07-01\",\r\n    \"batchNumber\": \"LSV25040101\",\r\n    \"notes\": \"Vaksin Lumpy Skin Disease hari ini\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccination-histories/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccination-histories",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "317"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"13d-FhlTaA3t/b4Xwwu+/zS4SQLf7pU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 01:52:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat vaksinasi berhasil diperbarui\",\n    \"data\": {\n        \"id\": 1,\n        \"livestockId\": 4,\n        \"vaccineId\": 1,\n        \"isVaccinated\": false,\n        \"vaccinationDate\": \"2026-07-01\",\n        \"batchNumber\": \"LSV25040101\",\n        \"notes\": \"Vaksin Lumpy Skin Disease hari ini\",\n        \"createdAt\": \"2026-06-30T01:50:49.415Z\",\n        \"updatedAt\": \"2026-06-30T01:52:07.873Z\"\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}:{{port}}/vaccination-histories/2",
+              "host": [
+                "{{url}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "vaccination-histories",
+                "2"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}:{{port}}/vaccination-histories/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "vaccination-histories",
+                    "2"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "81"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"51-6jrsGvV6ZtTEVtpcq4+LVHMuTsU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 30 Jun 2026 01:56:00 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"message\": \"Riwayat vaksinasi berhasil dihapus\",\n    \"data\": {\n        \"id\": 2\n    },\n    \"statusCode\": 200\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

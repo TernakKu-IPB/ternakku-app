@@ -19,4 +19,11 @@ class AuthNotifier extends AsyncNotifier<UserModel?> {
       state = AsyncData(state.value!.copyWith(isVerified: true));
     }
   }
+
+  // Fungsi helper saat Onboarding sukses
+  void markAsHasFarm() {
+    if (state.value != null) {
+      state = AsyncData(state.value!.copyWith(hasFarm: true));
+    }
+  }
 }
