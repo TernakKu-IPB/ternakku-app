@@ -319,7 +319,9 @@ class DashboardScreen extends ConsumerWidget {
                           subtitle: 'Kondisi & Status',
                           icon: Icons.assignment_outlined,
                           color: const Color(0xFFF59E0B),
-                          onTap: () {},
+                          onTap: () {
+                            context.push('/condition-history');
+                          },
                         ),
                         _buildMenuCard(
                           context,

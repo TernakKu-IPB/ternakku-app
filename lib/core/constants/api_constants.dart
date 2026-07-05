@@ -33,4 +33,7 @@ class ApiConstants {
 
   // Livestock
   static const String livestock = '/livestocks';
+
+  // Condition History (Catatan Harian)
+  static const String conditionHistory = '/condition-histories';
 }

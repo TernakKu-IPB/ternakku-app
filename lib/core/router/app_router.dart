@@ -2,6 +2,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ternakku_app/features/auth/presentation/screens/verify_email_screen.dart';
+import 'package:ternakku_app/features/condition_history/domain/models/condition_history_model.dart';
+import 'package:ternakku_app/features/condition_history/presentation/screens/condition_history_detail_screen.dart';
+import 'package:ternakku_app/features/condition_history/presentation/screens/condition_history_form_screen.dart';
+import 'package:ternakku_app/features/condition_history/presentation/screens/condition_history_list_screen.dart';
 import 'package:ternakku_app/features/livestock/domain/models/livestock_model.dart';
 import 'package:ternakku_app/features/livestock/presentation/screens/livestock_detail_screen.dart';
 import 'package:ternakku_app/features/livestock/presentation/screens/livestock_form_screen.dart';
@@ -94,6 +98,26 @@ final goRouter = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final livestock = state.extra as LivestockModel;
           return LivestockDetailScreen(livestock: livestock);
+        },
+      ),
+
+      // ---- Catatan Harian (Condition History) ----
+      GoRoute(
+        path: '/condition-history',
+        builder: (context, state) => const ConditionHistoryListScreen(),
+      ),
+      GoRoute(
+        path: '/condition-history/form',
+        builder: (context, state) {
+          final historyToEdit = state.extra as ConditionHistoryModel?;
+          return ConditionHistoryFormScreen(history: historyToEdit);
+        },
+      ),
+      GoRoute(
+        path: '/condition-history/detail',
+        builder: (context, state) {
+          final history = state.extra as ConditionHistoryModel;
+          return ConditionHistoryDetailScreen(history: history);
         },
       ),
     ],

@@ -6,7 +6,15 @@ import 'core/theme/app_theme.dart';
 
 import 'package:app_links/app_links.dart';
 
-void main() {
+import 'package:intl/date_symbol_data_local.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('id_ID', null);
+
   runApp(
     const ProviderScope(
       child: TernakKuApp(),
@@ -63,6 +71,19 @@ class _TernakKuAppState extends ConsumerState<TernakKuApp> {
       title: 'TernakKu',
       theme: AppTheme.lightTheme,
       routerConfig: router,
+
+      locale: const Locale('id', 'ID'),
+
+      supportedLocales: const [
+        Locale('id', 'ID'),
+        Locale('en', 'US'),
+      ],
+
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
     );
   }
 }
