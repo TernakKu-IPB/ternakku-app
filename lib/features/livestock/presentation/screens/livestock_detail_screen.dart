@@ -38,6 +38,67 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
   }
 
   // ==========================================
+  // HELPERS
+  // ==========================================
+
+  Color get _getStatusColor {
+    final lower = _currentLivestock.status.toLowerCase();
+    if (lower.contains('active') || lower.contains('alive')) {
+      return AppTheme.secondaryColor;
+    } else if (lower.contains('sold')) {
+      return Colors.blue;
+    } else if (lower.contains('dead') || lower.contains('deceased')) {
+      return Colors.red;
+    }
+    return AppTheme.primaryColor;
+  }
+
+  // IconData _getStatusIcon(String? status) {
+  //   if (status == null) return Icons.help_outline_rounded;
+  //   final lower = status.toLowerCase();
+  //   if (lower.contains('active') || lower.contains('alive')) {
+  //     return Icons.check_circle_rounded;
+  //   } else if (lower.contains('sold')) {
+  //     return Icons.sell_rounded;
+  //   } else if (lower.contains('dead') || lower.contains('deceased')) {
+  //     return Icons.dangerous_rounded;
+  //   }
+  //   return Icons.help_outline_rounded;
+  // }
+
+  String get _getStatusLabel {
+    switch (_currentLivestock.status.toLowerCase()) {
+      case 'active':
+        return 'Aktif';
+      case 'sold':
+        return 'Terjual';
+      case 'dead':
+        return 'Mati';
+      default:
+        return _currentLivestock.status;
+    }
+  }
+
+  IconData get _getAnimalIcon {
+    final lowerLabel = _currentLivestock.status.toLowerCase();
+    if (lowerLabel.contains('sapi') || lowerLabel.contains('cow')) {
+      return Icons.pets_rounded;
+    } else if (lowerLabel.contains('kambing') || lowerLabel.contains('goat')) {
+      return Icons.eco_rounded;
+    } else if (lowerLabel.contains('domba') || lowerLabel.contains('sheep')) {
+      return Icons.cloud_queue_rounded;
+    } else if (lowerLabel.contains('ayam') || lowerLabel.contains('chicken') || lowerLabel.contains('unggas')) {
+      return Icons.egg_rounded;
+    } else if (lowerLabel.contains('bebek') || lowerLabel.contains('duck')) {
+      return Icons.water_drop_rounded;
+    } else if (lowerLabel.contains('kelinci') || lowerLabel.contains('rabbit')) {
+      return Icons.pets_rounded;
+    }
+    return Icons.pets_rounded;
+  }
+  
+
+  // ==========================================
   // FETCH LABEL ASLI
   // ==========================================
   Future<void> _loadReferenceLabels() async {
@@ -103,20 +164,33 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
         title: Text('Hapus Ternak?', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         content: Text(
           'Apakah Anda yakin ingin menghapus data ${widget.livestock.name ?? 'ternak ini'}? Tindakan ini tidak dapat dibatalkan.',
-          style: GoogleFonts.poppins(),
+          style: GoogleFonts.poppins(color: Colors.grey.shade600),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal'),
+            child: Text(
+              'Batal',
+              style: GoogleFonts.poppins(
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
               await _executeDelete();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Hapus'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            child: Text(
+              'Hapus',
+              style: GoogleFonts.poppins(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -126,8 +200,9 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
   Future<void> _executeDelete() async {
     setState(() => _isDeleting = true);
     try {
-      final repo = ref.read(livestockRepositoryProvider);
-      await repo.deleteLivestock(widget.livestock.id);
+      await ref
+        .read(livestockRepositoryProvider)
+        .deleteLivestock(widget.livestock.id);
       
       if (mounted) {
         // Refresh daftar list ternak di background
@@ -155,11 +230,16 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
   Widget build(BuildContext context) {
     final item = _currentLivestock;
     final isMale = item.gender == 'male';
+    final color = _getStatusColor;
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        title: const Text('Detail Ternak'),
+        title: Text(
+          'Detail Ternak',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: AppTheme.scaffoldBackground,
         actions: [
           // Tombol Edit
           IconButton(
@@ -183,7 +263,19 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
         ],
       ),
       body: _isDeleting
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Menghapus ternak...',
+                    style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -194,10 +286,15 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryColor,
+                      gradient: LinearGradient(
+                        colors: [color, color.withValues(alpha: 0.75)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                          color: color.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 6),
                         ),
@@ -213,9 +310,9 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            isMale ? Icons.male : Icons.female,
-                            size: 40,
-                            color: isMale ? Colors.blue : Colors.pink,
+                            _getAnimalIcon,
+                            size: 38,
+                            color: color,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -230,20 +327,24 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
                         ),
                         const SizedBox(height: 4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             item.tagId ?? 'Tidak ada Tag',
-                            style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // --- KARTU INFORMASI ---
                   Container(
@@ -258,35 +359,117 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Informasi Detail', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const Divider(height: 30),
-                        _buildInfoRow('Status', item.status.toUpperCase()),
-                        _buildInfoRow('Jenis Ternak', _animalTypeLabel),
-                        _buildInfoRow('Jenis Kelamin', isMale ? 'Jantan' : 'Betina'),
-                        _buildInfoRow(
-                          'Tanggal Lahir',
-                          item.birthDate != null ? DateFormat('dd MMMM yyyy').format(item.birthDate!) : '-',
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: color,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Informasi Detail',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
-                        const Divider(height: 30),
-                        Text('Silsilah (ID)', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 16),
-                        _buildInfoRow('Bapak (Pejantan)', _fatherLabel),
-                        _buildInfoRow('Ibu (Induk)', _motherLabel),
+                        const Divider(height: 28),
+                        _buildInfoRow(
+                          Icons.verified_rounded,
+                          'Status',
+                          _getStatusLabel,
+                        ),
+                        _buildInfoRow(
+                          Icons.pets_rounded,
+                          'Jenis Ternak',
+                          _animalTypeLabel,
+                        ),
+                        _buildInfoRow(
+                          isMale ? Icons.male_rounded : Icons.female_rounded,
+                          'Jenis Kelamin',
+                          isMale ? 'Jantan' : 'Betina',
+                        ),
+                        _buildInfoRow(
+                          Icons.cake_rounded,
+                          'Tanggal Lahir',
+                          item.birthDate != null
+                              ? DateFormat('dd MMMM yyyy', 'id_ID')
+                                .format(item.birthDate!)
+                              : '-',
+                        ),
                       ],
                     ),
                   ),
+
+                  if (item.fatherId != null || item.motherId != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.account_tree_rounded,
+                                color: color,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Silsilah',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textPrimary,
+                                ),
+                              ),
+                            ]
+                          ),
+                          const Divider(height: 28),
+                          _buildInfoRow(
+                            Icons.man_rounded,
+                            'Bapak (Pejantan)',
+                            _fatherLabel,
+                          ),
+                          _buildInfoRow(
+                            Icons.woman_rounded,
+                            'Ibu (Induk)',
+                            _motherLabel,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Icon(icon, size: 17, color: Colors.grey.shade400),
+          const SizedBox(width: 12),
           Expanded(
             flex: 2,
             child: Text(

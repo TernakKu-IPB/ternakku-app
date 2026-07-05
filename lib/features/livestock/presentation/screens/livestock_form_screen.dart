@@ -62,16 +62,16 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
 
       // Set placeholder "Memuat..." sambil menunggu API
       _selectedAnimalTypeId = item.animalTypeId;
-      _selectedAnimalTypeLabel = 'Memuat data...';
+      _selectedAnimalTypeLabel = 'Memuat data ...';
       
       if (item.fatherId != null) {
         _selectedFatherId = item.fatherId;
-        _selectedFatherLabel = 'Memuat data...';
+        _selectedFatherLabel = 'Memuat data ...';
       }
       
       if (item.motherId != null) {
         _selectedMotherId = item.motherId;
-        _selectedMotherLabel = 'Memuat data...';
+        _selectedMotherLabel = 'Memuat data ...';
       }
 
       // Jalankan fetch label di background setelah UI dirender
@@ -177,10 +177,17 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ModalSearchBottomSheet<Map<String, dynamic>>(
-        title: 'Cari Jenis Ternak',
+        title: 'Pilih Jenis Ternak',
+        hintText: 'Cari jenis ternak ...',
         onSearch: _searchAnimalTypes,
         allowNull: false,
-        itemBuilder: (item) => Text('${item['label']}', style: GoogleFonts.poppins()),
+        itemBuilder: (item) => Text(
+          '${item['label']}',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
         onSelected: (item) {
           if (item != null) {
             setState(() {
@@ -201,10 +208,30 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ModalSearchBottomSheet<LivestockModel>(
-        title: 'Cari Pejantan (Bapak)',
+        title: 'Pilih Pejantan (Bapak)',
+        hintText: 'Cari pejantan dari ternak ini ...',
         onSearch: _searchFathers,
         allowNull: true,
-        itemBuilder: (item) => Text('${item.name ?? 'Tanpa Nama'} - Tag: ${item.tagId ?? '-'}', style: GoogleFonts.poppins()),
+        itemBuilder: (item) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.name ?? 'Tanpa Nama',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+            if (item.tagId != null)
+              Text(
+                'Tag: ${item.tagId}',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey.shade500,
+                ),
+              ),
+          ],
+        ),
         onSelected: (item) {
           setState(() {
             _selectedFatherId = item?.id;
@@ -225,10 +252,30 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ModalSearchBottomSheet<LivestockModel>(
-        title: 'Cari Induk (Ibu)',
+        title: 'Pilih Induk (Ibu)',
+        hintText: 'Cari induk dari ternak ini ...',
         onSearch: _searchMothers,
         allowNull: true,
-        itemBuilder: (item) => Text('${item.name ?? 'Tanpa Nama'} - Tag: ${item.tagId ?? '-'}', style: GoogleFonts.poppins()),
+        itemBuilder: (item) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.name ?? 'Tanpa Nama',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+            if (item.tagId != null)
+              Text(
+                'Tag: ${item.tagId}',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey.shade500,
+                ),
+              ),
+          ],
+        ),
         onSelected: (item) {
           setState(() {
             _selectedMotherId = item?.id;
@@ -253,7 +300,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
     final name = _nameController.text.trim();
     
     if (tag.isEmpty && name.isEmpty) {
-      const message = 'Setidaknya Tag ID atau Nama harus diisi';
+      const message = 'Setidaknya tag ID atau nama ternak harus diisi';
       setState(() {
         _serverErrors['tagId'] = message;
         _serverErrors['name'] = message;
@@ -320,12 +367,13 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedBirthDate ?? DateTime.now(),
+      initialDate: _selectedBirthDate,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
+      locale: const Locale('id', 'ID'),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(primary: AppTheme.primaryColor),
@@ -341,7 +389,10 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit Ternak' : 'Tambah Ternak'),
+        title: Text(
+          _isEdit ? 'Edit Ternak' : 'Tambah Ternak', 
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold)
+        ),
         backgroundColor: AppTheme.scaffoldBackground,
       ),
       body: SafeArea(
@@ -363,6 +414,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                       decoration: InputDecoration(
                         labelText: 'Tag ID / Nomor Telinga',
                         hintText: 'Contoh: ET-000003',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
                         errorText: _serverErrors['tagId'],
                       ),
                       onChanged: (value) {
@@ -382,6 +434,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                       decoration: InputDecoration(
                         labelText: 'Nama Ternak',
                         hintText: 'Contoh: Limookid',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
                         errorText: _serverErrors['name'],
                       ),
                       onChanged: (value) {
@@ -410,7 +463,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                         ),
                         isEmpty: _selectedAnimalTypeId == null,
                         child: Text(
-                          _selectedAnimalTypeLabel ?? 'Pilih jenis ternak...',
+                          _selectedAnimalTypeLabel ?? 'Pilih jenis ternak ...',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -449,12 +502,35 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                     
                     // Tanggal Lahir
                     GestureDetector(
-                      onTap: () => _selectDate(context),
+                      onTap: () => _selectDate(),
                       child: InputDecorator(
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Tanggal Lahir (Opsional)',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          suffixIcon: Icon(Icons.calendar_today, size: 20),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (_selectedBirthDate != null)
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  tooltip: 'Hapus tanggal',
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedBirthDate = null;
+                                    });
+                                  },
+                                ),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 12),
+                                child: Icon(
+                                  Icons.calendar_today,
+                                  size: 20,
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         isEmpty: _selectedBirthDate == null,
                         child: Text(
@@ -472,6 +548,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                       decoration: InputDecoration(
                         labelText: 'Status Ternak',
                         errorText: _serverErrors['status'],
+                        iconColor: AppTheme.primaryColor,
                       ),
                       initialValue: _selectedStatus,
                       items: const [
@@ -498,7 +575,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                           labelText: 'Pejantan (Bapak)',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           errorText: _serverErrors['fatherId'],
-                          suffixIcon: const Icon(Icons.search, color: Colors.blue),
+                          suffixIcon: const Icon(Icons.search, color: AppTheme.primaryColor),
                         ),
                         isEmpty: _selectedFatherId == null,
                         child: Text(
@@ -520,7 +597,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                           labelText: 'Induk (Ibu)',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           errorText: _serverErrors['motherId'],
-                          suffixIcon: const Icon(Icons.search, color: Colors.pink),
+                          suffixIcon: const Icon(Icons.search, color: AppTheme.primaryColor),
                         ),
                         isEmpty: _selectedMotherId == null,
                         child: Text(
@@ -547,7 +624,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                   child: _isLoading
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                       : Text(
-                          'Simpan Data Ternak',
+                          _isEdit ? 'Perbarui Data Ternak' : 'Simpan Data Ternak',
                           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                 ),
@@ -632,6 +709,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
 // ============================================================================
 class ModalSearchBottomSheet<T> extends StatefulWidget {
   final String title;
+  final String hintText;
   final Future<List<T>> Function(String query) onSearch;
   final Widget Function(T item) itemBuilder;
   final void Function(T? item) onSelected;
@@ -640,6 +718,7 @@ class ModalSearchBottomSheet<T> extends StatefulWidget {
   const ModalSearchBottomSheet({
     super.key,
     required this.title,
+    required this.hintText,
     required this.onSearch,
     required this.itemBuilder,
     required this.onSelected,
@@ -724,7 +803,11 @@ class _ModalSearchBottomSheetState<T> extends State<ModalSearchBottomSheet<T>> {
           const SizedBox(height: 16),
           Text(
             widget.title,
-            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+            style: GoogleFonts.poppins(
+              fontSize: 18, 
+              fontWeight: FontWeight.bold, 
+              color: AppTheme.textPrimary,
+            ),
           ),
           const SizedBox(height: 16),
           
@@ -733,7 +816,7 @@ class _ModalSearchBottomSheetState<T> extends State<ModalSearchBottomSheet<T>> {
             controller: _searchController,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: 'Ketik untuk mencari...',
+              hintText: widget.hintText,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
@@ -744,6 +827,11 @@ class _ModalSearchBottomSheetState<T> extends State<ModalSearchBottomSheet<T>> {
                       },
                     )
                   : null,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                    color: AppTheme.primaryColor, width: 2),
+              ),
             ),
             onChanged: _onSearchChanged,
           ),
@@ -759,7 +847,7 @@ class _ModalSearchBottomSheetState<T> extends State<ModalSearchBottomSheet<T>> {
                       if (widget.allowNull)
                         ListTile(
                           leading: const Icon(Icons.do_not_disturb_alt, color: Colors.grey),
-                          title: Text('Tidak Diketahui / Kosongkan', style: GoogleFonts.poppins(color: Colors.grey.shade600)),
+                          title: Text('Kosongkan', style: GoogleFonts.poppins(color: Colors.grey.shade600)),
                           onTap: () {
                             widget.onSelected(null);
                             Navigator.pop(context);
@@ -770,9 +858,20 @@ class _ModalSearchBottomSheetState<T> extends State<ModalSearchBottomSheet<T>> {
                         Padding(
                           padding: const EdgeInsets.all(32.0),
                           child: Center(
-                            child: Text(
-                              'Data tidak ditemukan',
-                              style: GoogleFonts.poppins(color: Colors.grey.shade500),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.search_off_rounded,
+                                  size: 48,
+                                  color: Colors.grey.shade300,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Data tidak ditemukan',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.grey.shade500),
+                                ),
+                              ],
                             ),
                           ),
                         )

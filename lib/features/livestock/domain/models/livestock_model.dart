@@ -13,6 +13,8 @@ class LivestockModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  final Map<String, dynamic>? animalType;
+
   LivestockModel({
     required this.id,
     required this.farmId,
@@ -27,6 +29,7 @@ class LivestockModel {
     this.motherId,
     required this.createdAt,
     required this.updatedAt,
+    this.animalType,
   });
 
   factory LivestockModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +47,7 @@ class LivestockModel {
       motherId: json['motherId'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      animalType: json['animalType'] as Map<String, dynamic>?,
     );
   }
 }

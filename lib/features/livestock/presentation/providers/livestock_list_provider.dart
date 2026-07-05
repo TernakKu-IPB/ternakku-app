@@ -117,4 +117,9 @@ class LivestockListNotifier extends StateNotifier<LivestockListState> {
     state = state.copyWith(animalTypeId: id);
     fetchLivestocks(isRefresh: true);
   }
+
+  void clearFilters() {
+    state = LivestockListState(query: state.query);
+    fetchLivestocks(isRefresh: true);
+  }
 }

@@ -35,6 +35,32 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
     super.dispose();
   }
 
+  Color _getStatusColor(String? status) {
+    if (status == null) return AppTheme.primaryColor;
+    final lower = status.toLowerCase();
+    if (lower.contains('active') || lower.contains('alive')) {
+      return AppTheme.secondaryColor;
+    } else if (lower.contains('sold')) {
+      return Colors.blue;
+    } else if (lower.contains('dead') || lower.contains('deceased')) {
+      return Colors.red;
+    }
+    return AppTheme.primaryColor;
+  }
+
+  // IconData _getStatusIcon(String? status) {
+  //   if (status == null) return Icons.help_outline_rounded;
+  //   final lower = status.toLowerCase();
+  //   if (lower.contains('active') || lower.contains('alive')) {
+  //     return Icons.check_circle_rounded;
+  //   } else if (lower.contains('sold')) {
+  //     return Icons.sell_rounded;
+  //   } else if (lower.contains('dead') || lower.contains('deceased')) {
+  //     return Icons.dangerous_rounded;
+  //   }
+  //   return Icons.help_outline_rounded;
+  // }
+
   String _getStatusLabel(String status) {
     switch (status.toLowerCase()) {
       case 'active':
@@ -48,11 +74,35 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
     }
   }
 
+  IconData _getAnimalIcon(String label) {
+    final lowerLabel = label.toLowerCase();
+    if (lowerLabel.contains('sapi') || lowerLabel.contains('cow')) {
+      return Icons.pets_rounded;
+    } else if (lowerLabel.contains('kambing') || lowerLabel.contains('goat')) {
+      return Icons.eco_rounded;
+    } else if (lowerLabel.contains('domba') || lowerLabel.contains('sheep')) {
+      return Icons.cloud_queue_rounded;
+    } else if (lowerLabel.contains('ayam') || lowerLabel.contains('chicken') || lowerLabel.contains('unggas')) {
+      return Icons.egg_rounded;
+    } else if (lowerLabel.contains('bebek') || lowerLabel.contains('duck')) {
+      return Icons.water_drop_rounded;
+    } else if (lowerLabel.contains('kelinci') || lowerLabel.contains('rabbit')) {
+      return Icons.pets_rounded;
+    }
+    return Icons.pets_rounded;
+  }
+  
+  bool get _hasActiveFilters {
+    final state = ref.read(livestockListProvider);
+    return state.status != null ||
+        state.gender != null ||
+        state.animalTypeId != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(livestockListProvider);
     final notifier = ref.read(livestockListProvider.notifier);
-    
     final animalTypesAsync = ref.watch(farmAnimalTypesProvider);
 
     return Scaffold(
@@ -68,11 +118,28 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
         ),
         elevation: 0,
         backgroundColor: AppTheme.scaffoldBackground,
+        actions: [
+          if (_hasActiveFilters)
+            TextButton.icon(
+              onPressed: () => notifier.clearFilters(),
+              icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
+              label: Text(
+                'Reset',
+                style: GoogleFonts.poppins(fontSize: 13),
+              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+            ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/livestock/form'),
         backgroundColor: AppTheme.primaryColor,
-        child: const Icon(Icons.add, color: Colors.white),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add_rounded),
+        label: Text(
+          'Tambah',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
@@ -139,7 +206,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                     onSubmitted: (value) => notifier.updateQuery(value),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 
                 // Filter Chips (Scrollable Horizontal)
                 SingleChildScrollView(
@@ -147,60 +214,29 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                   physics: const BouncingScrollPhysics(),
                   child: Row(
                     children: [
-                      _buildFilterChip('Semua', state.status == null && state.animalTypeId == null && state.gender == null, () {
-                        notifier.updateStatus(null);
-                        notifier.updateGender(null);
-                        notifier.updateAnimalType(-1);
-                      }),
-                      const SizedBox(width: 8),                      
-                      _buildFilterChip(
-                        'Aktif', 
-                        state.status == 'active', 
-                        () => notifier.updateStatus(state.status == 'active' ? null : 'active')
-                      ),
-                      const SizedBox(width: 8),
-                      _buildFilterChip(
-                        'Terjual', 
-                        state.status == 'sold', 
-                        () => notifier.updateStatus(state.status == 'sold' ? null : 'sold')
-                      ),
-                      const SizedBox(width: 8),
-                      _buildFilterChip(
-                        'Mati', 
-                        state.status == 'dead', 
-                        () => notifier.updateStatus(state.status == 'dead' ? null : 'dead')
-                      ),
-                      
-                      // Divider vertikal kecil
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        height: 20,
-                        width: 1.5,
-                        color: Colors.grey.shade300,
-                      ),
-
                       // --- FILTER JENIS TERNAK (DINAMIS API DENGAN BOTTOM SHEET MODERN) ---
                       animalTypesAsync.when(
                         data: (types) {
                           if (types.isEmpty) return const SizedBox.shrink();
 
-                          final selectedType = types.firstWhere(
-                            (type) => type['id'] == state.animalTypeId,
-                            orElse: () => {},
-                          );
+                          final selectedType = state.animalTypeId != null
+                            ? types.firstWhere(
+                                (t) => t['id'] == state.animalTypeId,
+                                orElse: () => {},
+                              )
+                            : null;
                           final hasSelection = state.animalTypeId != null;
-                          final displayLabel = hasSelection ? 'Jenis: ${selectedType['label']}' : 'Semua Jenis';
+                          final label = hasSelection && selectedType != null && selectedType.isNotEmpty
+                            ? 'Jenis: ${selectedType['label']}'
+                            : 'Semua Jenis';
 
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: _buildFilterChip(
-                              displayLabel,
-                              hasSelection,
-                              () => _showAnimalTypeFilterBottomSheet(context, ref, types),
-                              icon: Icons.keyboard_arrow_down_rounded,
-                              iconColor: hasSelection ? Colors.white : Colors.grey.shade600,
-                              iconOnRight: true,
-                            ),
+                          return _buildFilterChip(
+                            label,
+                            hasSelection,
+                            () => _showAnimalTypeFilterBottomSheet(context, ref, types),
+                            icon: Icons.keyboard_arrow_down_rounded,
+                            iconColor: hasSelection ? Colors.white : Colors.grey.shade600,
+                            iconOnRight: true,
                           );
                         },
                         loading: () => const Padding(
@@ -208,6 +244,31 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                           child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
                         ),
                         error: (_, _) => const SizedBox.shrink(),
+                      ),
+
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        height: 20,
+                        width: 1.5,
+                        color: Colors.grey.shade300,
+                      ),
+
+                      _buildFilterChip(
+                        _getStatusLabel('active'), 
+                        state.status == 'active', 
+                        () => notifier.updateStatus(state.status == 'active' ? null : 'active')
+                      ),
+                      const SizedBox(width: 8),
+                      _buildFilterChip(
+                        _getStatusLabel('sold'),
+                        state.status == 'sold', 
+                        () => notifier.updateStatus(state.status == 'sold' ? null : 'sold')
+                      ),
+                      const SizedBox(width: 8),
+                      _buildFilterChip(
+                        _getStatusLabel('dead'),
+                        state.status == 'dead', 
+                        () => notifier.updateStatus(state.status == 'dead' ? null : 'dead')
                       ),
 
                       Container(
@@ -251,7 +312,8 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                       ? _buildEmptyState()
                       : ListView.separated(
                           controller: _scrollController,
-                          padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 90),
+                          padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 8, bottom: 100),
                           itemCount: state.livestocks.length + (state.isLoadMore ? 1 : 0),
                           separatorBuilder: (_, _) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
@@ -295,24 +357,6 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
               final label = type['label'].toString().toLowerCase();
               return label.contains(searchQuery.toLowerCase());
             }).toList();
-
-            IconData getAnimalIcon(String label) {
-              final lowerLabel = label.toLowerCase();
-              if (lowerLabel.contains('sapi') || lowerLabel.contains('cow')) {
-                return Icons.pets_rounded;
-              } else if (lowerLabel.contains('kambing') || lowerLabel.contains('goat')) {
-                return Icons.eco_rounded;
-              } else if (lowerLabel.contains('domba') || lowerLabel.contains('sheep')) {
-                return Icons.cloud_queue_rounded;
-              } else if (lowerLabel.contains('ayam') || lowerLabel.contains('chicken') || lowerLabel.contains('unggas')) {
-                return Icons.egg_rounded;
-              } else if (lowerLabel.contains('bebek') || lowerLabel.contains('duck')) {
-                return Icons.water_drop_rounded;
-              } else if (lowerLabel.contains('kelinci') || lowerLabel.contains('rabbit')) {
-                return Icons.pets_rounded;
-              }
-              return Icons.pets_rounded;
-            }
 
             return Padding(
               padding: EdgeInsets.only(
@@ -479,7 +523,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
-                                      getAnimalIcon(type['label']),
+                                      _getAnimalIcon(type['label']),
                                       color: isSelected ? AppTheme.primaryColor : Colors.grey.shade600,
                                       size: 20,
                                     ),
@@ -625,11 +669,9 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
   }
 
   Widget _buildLivestockCard(LivestockModel item) {
-    Color statusColor = Colors.grey;
-    if (item.status == 'active') statusColor = AppTheme.secondaryColor;
-    if (item.status == 'sold') statusColor = Colors.blue;
-    if (item.status == 'dead') statusColor = Colors.red;
-
+    final cardColor = _getStatusColor(item.status);
+    final animalTypeLabel =
+        item.animalType?['label'] as String? ?? 'Ternak';
     final isMale = item.gender == 'male';
 
     return Container(
@@ -653,7 +695,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
               // Garis Indikator Status di Sebelah Kiri
               Container(
                 width: 5,
-                color: statusColor,
+                color: cardColor,
               ),
               Expanded(
                 child: Material(
@@ -668,11 +710,11 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                         children: [
                           // Avatar / Gambar Ternak
                           Container(
-                            width: 60,
-                            height: 60,
+                            width: 50,
+                            height: 50,
                             decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(12),
+                              color: cardColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                             child: item.picture != null && item.picture!.isNotEmpty
                                 ? ClipRRect(
@@ -680,9 +722,9 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                                     child: Image.network(item.picture!, fit: BoxFit.cover),
                                   )
                                 : Icon(
-                                    Icons.pets_rounded,
-                                    color: AppTheme.primaryColor.withValues(alpha: 0.6),
-                                    size: 28,
+                                    _getAnimalIcon(animalTypeLabel),
+                                    color: cardColor,
+                                    size: 26,
                                   ),
                           ),
                           const SizedBox(width: 16),
@@ -700,58 +742,88 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                                         item.name ?? 'Tanpa Nama',
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: AppTheme.textPrimary,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
-                                    // Icon Gender
-                                    Icon(
-                                      isMale ? Icons.male_rounded : Icons.female_rounded,
-                                      color: isMale ? Colors.blue : Colors.pink,
-                                      size: 20,
-                                    ),
                                   ],
                                 ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    'Tag: ${item.tagId ?? '-'}',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade600,
+                                if (item.tagId != null) ...[
+                                  const SizedBox(height: 3),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade100,
+                                      borderRadius:
+                                          BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'Tag: ${item.tagId}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
                                   ),
+                                ],
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      _getAnimalIcon(animalTypeLabel),
+                                      size: 11,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      animalTypeLabel,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 8),
                           
-                          // Badge Status
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: statusColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              _getStatusLabel(item.status).toUpperCase(),
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: statusColor,
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // Icon Gender
+                              Icon(
+                                isMale ? Icons.male_rounded : Icons.female_rounded,
+                                color: isMale ? Colors.blue : Colors.pink,
+                                size: 20,
                               ),
-                            ),
+
+                              // Badge Status
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: cardColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  _getStatusLabel(item.status).length > 12
+                                      ? '${_getStatusLabel(item.status).substring(0, 12)}...'
+                                      : _getStatusLabel(item.status),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: cardColor,
+                                  ),
+                                ),
+                              ),
+                            ]
                           ),
                         ],
                       ),
