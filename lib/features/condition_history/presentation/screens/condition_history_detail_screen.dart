@@ -28,7 +28,6 @@ class _ConditionHistoryDetailScreenState
   // Labels yang di-fetch dari API
   String _livestockLabel = '-';
   String _conditionTypeLabel = '-';
-  String? _conditionTypeCode;
 
   @override
   void initState() {
@@ -44,7 +43,7 @@ class _ConditionHistoryDetailScreenState
   // ==========================================
 
   Color get _conditionColor {
-    final code = _conditionTypeCode?.toLowerCase() ?? '';
+    final code = _conditionTypeLabel.toLowerCase();
     if (code.contains('sehat') || code.contains('baik') || code.contains('normal')) {
       return const Color(0xFF22C55E);
     } else if (code.contains('sakit') || code.contains('ill') || code.contains('sick')) {
@@ -60,7 +59,7 @@ class _ConditionHistoryDetailScreenState
   }
 
   IconData get _conditionIcon {
-    final code = _conditionTypeCode?.toLowerCase() ?? '';
+    final code = _conditionTypeLabel.toLowerCase();
     if (code.contains('sehat') || code.contains('baik') || code.contains('normal')) {
       return Icons.favorite_rounded;
     } else if (code.contains('sakit') || code.contains('ill') || code.contains('sick')) {
@@ -113,7 +112,6 @@ class _ConditionHistoryDetailScreenState
         setState(() {
           _conditionTypeLabel =
               item.conditionType!['label'] as String? ?? '-';
-          _conditionTypeCode = item.conditionType!['code'] as String?;
         });
       }
     } else {
@@ -123,7 +121,6 @@ class _ConditionHistoryDetailScreenState
         if (mounted) {
           setState(() {
             _conditionTypeLabel = ct['label'] as String? ?? '-';
-            _conditionTypeCode = ct['code'] as String?;
           });
         }
       } catch (_) {

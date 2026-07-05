@@ -412,14 +412,12 @@ class _ConditionHistoryListScreenState
   Widget _buildHistoryCard(ConditionHistoryModel item) {
     final conditionLabel =
         item.conditionType?['label'] as String? ?? 'Kondisi';
-    final conditionCode =
-        item.conditionType?['code'] as String? ?? '';
     final livestockName =
         item.livestock?['name'] as String? ?? 'Tanpa Nama';
     final livestockTag = item.livestock?['tagId'] as String?;
 
-    final cardColor = _getConditionColor(conditionCode);
-    final cardIcon = _getConditionIcon(conditionCode);
+    final cardColor = _getConditionColor(conditionLabel);
+    final cardIcon = _getConditionIcon(conditionLabel);
 
     return Container(
       decoration: BoxDecoration(
