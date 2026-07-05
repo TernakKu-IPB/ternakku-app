@@ -2,11 +2,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ternakku_app/features/auth/presentation/screens/verify_email_screen.dart';
+import 'package:ternakku_app/features/livestock/domain/models/livestock_model.dart';
+import 'package:ternakku_app/features/livestock/presentation/screens/livestock_detail_screen.dart';
+import 'package:ternakku_app/features/livestock/presentation/screens/livestock_form_screen.dart';
+import 'package:ternakku_app/features/livestock/presentation/screens/livestock_list_screen.dart';
 import 'package:ternakku_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/auth/presentation/screens/dashboard_screen.dart';
+import '../../features/dashboard_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/reset_password_screen.dart';
 
@@ -76,6 +80,22 @@ final goRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/dashboard', builder: (context, state) => const DashboardScreen()),
       GoRoute(path: '/on-boarding', builder: (context, state) => const OnboardingScreen()),
+      GoRoute(path: '/livestock', builder: (context, state) => const LivestockListScreen()),
+      GoRoute(
+        path: '/livestock/form',
+        builder: (context, state) {
+          // Tangkap extra object untuk mode edit
+          final livestockToEdit = state.extra as LivestockModel?;
+          return LivestockFormScreen(livestock: livestockToEdit);
+        },
+      ),
+      GoRoute(
+        path: '/livestock/detail',
+        builder: (context, state) {
+          final livestock = state.extra as LivestockModel;
+          return LivestockDetailScreen(livestock: livestock);
+        },
+      ),
     ],
   );
 });
