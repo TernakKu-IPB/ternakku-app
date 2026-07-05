@@ -31,7 +31,7 @@ class ConditionHistoryRepository extends BaseRepository {
           'limit': limit,
           'offset': offset,
           if (query != null && query.isNotEmpty) 'q': query,
-          if (livestockId != null) 'livestockId': livestockId,
+          if (livestockId != null && !livestockId.isNegative) 'livestockId': livestockId,
           if (conditionTypeId != null && conditionTypeId > 0) 'conditionTypeId': conditionTypeId,
           if (startDate != null) 'startDate': startDate.toIso8601String().split('T').first,
           if (endDate != null) 'endDate': endDate.toIso8601String().split('T').first,

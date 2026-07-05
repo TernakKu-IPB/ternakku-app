@@ -61,15 +61,15 @@ class _ConditionHistoryFormScreenState
         _selectedLivestockLabel =
             tag != null ? '$name ($tag)' : name;
       } else {
-        _selectedLivestockLabel = 'Memuat data...';
+        _selectedLivestockLabel = 'Memuat data ...';
       }
 
       _selectedConditionTypeId = item.conditionTypeId;
       if (item.conditionType != null && item.conditionType!.isNotEmpty) {
         _selectedConditionTypeLabel =
-            item.conditionType!['label'] as String? ?? 'Memuat data...';
+            item.conditionType!['label'] as String? ?? 'Memuat data ...';
       } else {
-        _selectedConditionTypeLabel = 'Memuat data...';
+        _selectedConditionTypeLabel = 'Memuat data ...';
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -148,7 +148,7 @@ class _ConditionHistoryFormScreenState
       backgroundColor: Colors.transparent,
       builder: (context) => _ModalSearchBottomSheet<LivestockModel>(
         title: 'Pilih Ternak',
-        hintText: 'Cari nama atau tag ternak...',
+        hintText: 'Cari nama atau tag ternak ...',
         onSearch: _searchLivestocks,
         allowNull: false,
         itemBuilder: (item) => Column(
@@ -195,7 +195,7 @@ class _ConditionHistoryFormScreenState
       builder: (context) =>
           _ModalSearchBottomSheet<Map<String, dynamic>>(
         title: 'Pilih Jenis Kondisi',
-        hintText: 'Cari jenis kondisi...',
+        hintText: 'Cari jenis kondisi ...',
         onSearch: _searchConditionTypes,
         allowNull: false,
         itemBuilder: (item) => Text(
@@ -361,7 +361,7 @@ class _ConditionHistoryFormScreenState
                         isEmpty: _selectedLivestockId == null,
                         child: Text(
                           _selectedLivestockLabel ??
-                              'Pilih ternak yang akan dicatat...',
+                              'Pilih ternak yang akan dicatat ...',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -399,7 +399,7 @@ class _ConditionHistoryFormScreenState
                         isEmpty: _selectedConditionTypeId == null,
                         child: Text(
                           _selectedConditionTypeLabel ??
-                              'Pilih jenis kondisi...',
+                              'Pilih jenis kondisi ...',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -452,7 +452,7 @@ class _ConditionHistoryFormScreenState
                       minLines: 3,
                       decoration: InputDecoration(
                         hintText:
-                            'Tambahkan keterangan tambahan, misal: ternak tampak lemas, tidak mau makan...',
+                            'Tambahkan keterangan tambahan, misal: ternak tampak lemas, tidak mau makan ...',
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 13,
                           color: Colors.grey.shade400,
