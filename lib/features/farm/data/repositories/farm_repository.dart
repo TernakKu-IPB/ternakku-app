@@ -132,4 +132,26 @@ class FarmRepository extends BaseRepository {
     final response = await _dio.get('${ApiConstants.conditionType}/$id');
     return response.data['data'];
   }
-}
+
+  Future<List<Map<String, dynamic>>> getVaccines({
+    int limit = 20,
+    int offset = 0,
+    String? query,
+  }) async {
+    final response = await _dio.get(
+      ApiConstants.vaccine,
+      queryParameters: {
+        'limit': limit,
+        'offset': offset,
+        if (query != null && query.isNotEmpty) 'q': query,
+      },
+    );
+    return List<Map<String, dynamic>>.from(
+        response.data['data']['vaccines']);
+  }
+
+  Future<Map<String, dynamic>> getVaccineDetail(int id) async {
+    final response = await _dio.get('${ApiConstants.vaccine}/$id');
+    return response.data['data'];
+  }
+}

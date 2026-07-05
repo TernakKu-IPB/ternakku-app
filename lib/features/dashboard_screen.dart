@@ -329,7 +329,9 @@ class DashboardScreen extends ConsumerWidget {
                           subtitle: 'Jadwal Vaksinasi',
                           icon: Icons.medical_services_outlined,
                           color: const Color(0xFFEF4444),
-                          onTap: () {},
+                          onTap: () {
+                            context.push('/vaccination-history');
+                          },
                         ),
                         _buildMenuCard(
                           context,

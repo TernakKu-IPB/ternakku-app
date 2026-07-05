@@ -11,6 +11,10 @@ import 'package:ternakku_app/features/livestock/presentation/screens/livestock_d
 import 'package:ternakku_app/features/livestock/presentation/screens/livestock_form_screen.dart';
 import 'package:ternakku_app/features/livestock/presentation/screens/livestock_list_screen.dart';
 import 'package:ternakku_app/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ternakku_app/features/vaccination_history/domain/models/vaccination_history_model.dart';
+import 'package:ternakku_app/features/vaccination_history/presentation/screens/vaccination_history_detail_screen.dart';
+import 'package:ternakku_app/features/vaccination_history/presentation/screens/vaccination_history_form_screen.dart';
+import 'package:ternakku_app/features/vaccination_history/presentation/screens/vaccination_history_list_screen.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
@@ -118,6 +122,26 @@ final goRouter = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final history = state.extra as ConditionHistoryModel;
           return ConditionHistoryDetailScreen(history: history);
+        },
+      ),
+
+      // ---- Rekam Medis (Vaccination History) ----
+      GoRoute(
+        path: '/vaccination-history',
+        builder: (context, state) => const VaccinationHistoryListScreen(),
+      ),
+      GoRoute(
+        path: '/vaccination-history/form',
+        builder: (context, state) {
+          final historyToEdit = state.extra as VaccinationHistoryModel?;
+          return VaccinationHistoryFormScreen(history: historyToEdit);
+        },
+      ),
+      GoRoute(
+        path: '/vaccination-history/detail',
+        builder: (context, state) {
+          final history = state.extra as VaccinationHistoryModel;
+          return VaccinationHistoryDetailScreen(history: history);
         },
       ),
     ],

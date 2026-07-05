@@ -416,6 +416,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                         hintText: 'Contoh: ET-000003',
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         errorText: _serverErrors['tagId'],
+                        errorMaxLines: 2,
                       ),
                       onChanged: (value) {
                         if (_serverErrors.containsKey('tagId')) {
@@ -436,6 +437,7 @@ class _LivestockFormScreenState extends ConsumerState<LivestockFormScreen> {
                         hintText: 'Contoh: Limookid',
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         errorText: _serverErrors['name'],
+                        errorMaxLines: 2,
                       ),
                       onChanged: (value) {
                         if (_serverErrors.containsKey('name')) {
