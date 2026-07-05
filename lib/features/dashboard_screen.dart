@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ternakku_app/core/theme/app_theme.dart';
 import 'package:ternakku_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ternakku_app/features/auth/presentation/providers/auth_controller.dart';
+import 'package:ternakku_app/features/dashboard_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -15,6 +16,7 @@ class DashboardScreen extends ConsumerWidget {
     final String initialName = user?.fullName.isNotEmpty == true 
         ? user!.fullName.split(' ').map((e) => e[0]).take(2).join().toUpperCase()
         : 'P';
+    final dashboardState = ref.watch(dashboardProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
@@ -48,8 +50,7 @@ class DashboardScreen extends ConsumerWidget {
           SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
-                // Simulating refresh action
-                await Future.delayed(const Duration(seconds: 1));
+                await ref.read(dashboardProvider.notifier).loadDashboard();
               },
               color: AppTheme.primaryColor,
               child: SingleChildScrollView(
@@ -223,7 +224,7 @@ class DashboardScreen extends ConsumerWidget {
                                           ),
                                           const SizedBox(height: 2),
                                           Text(
-                                            'Berkah Mulia Farm',
+                                            dashboardState.farmName,
                                             style: GoogleFonts.poppins(
                                               color: Colors.white,
                                               fontSize: 18,
@@ -235,11 +236,19 @@ class DashboardScreen extends ConsumerWidget {
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          color: AppTheme.secondaryColor,
+                                          color: dashboardState.perluPerhatian == 0
+                                              ? AppTheme.secondaryColor
+                                              : dashboardState.perluPerhatian <= 2
+                                                  ? const Color(0xFFF59E0B)
+                                                  : const Color(0xFFEF4444),
                                           borderRadius: BorderRadius.circular(20),
                                         ),
                                         child: Text(
-                                          'Sangat Baik',
+                                          dashboardState.perluPerhatian == 0
+                                              ? 'Sangat Baik'
+                                              : dashboardState.perluPerhatian <= 2
+                                                  ? 'Cukup Baik'
+                                                  : 'Perlu Perhatian',
                                           style: GoogleFonts.poppins(
                                             color: Colors.white,
                                             fontSize: 10,
@@ -253,11 +262,11 @@ class DashboardScreen extends ConsumerWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      _buildStatItem('Total Ternak', '124', Icons.pets_rounded),
+                                      _buildStatItem('Total Ternak', dashboardState.totalTernak.toString(), Icons.pets_rounded),
                                       Container(width: 1, height: 35, color: Colors.white.withValues(alpha: 0.3)),
-                                      _buildStatItem('Perlu Perhatian', '3', Icons.warning_amber_rounded),
+                                      _buildStatItem('Perlu Perhatian', dashboardState.perluPerhatian.toString(), Icons.warning_amber_rounded),
                                       Container(width: 1, height: 35, color: Colors.white.withValues(alpha: 0.3)),
-                                      _buildStatItem('Vaksin Terjadwal', '5', Icons.event_note_rounded),
+                                      _buildStatItem('Vaksin Terjadwal', dashboardState.vaksinTerjadwal.toString(), Icons.event_note_rounded),
                                     ],
                                   ),
                                 ],
@@ -283,14 +292,14 @@ class DashboardScreen extends ConsumerWidget {
                             color: AppTheme.textPrimary,
                           ),
                         ),
-                        Text(
-                          'Lihat Semua',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
+                        // Text(
+                        //   'Lihat Semua',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w600,
+                        //     color: AppTheme.primaryColor,
+                        //   ),
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 14),
@@ -359,30 +368,47 @@ class DashboardScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
 
                     // List Log Aktivitas Modern
-                    _buildActivityItem(
-                      title: 'Suntik Vaksin PMK',
-                      subtitle: 'Sapi Limousin • Tag #024',
-                      time: '2 jam yang lalu',
-                      statusColor: Colors.green,
-                      statusText: 'Selesai',
-                      icon: Icons.vaccines_rounded,
-                    ),
-                    _buildActivityItem(
-                      title: 'Pemeriksaan Kesehatan',
-                      subtitle: 'Kambing Etawa • Tag #109',
-                      time: '5 jam yang lalu',
-                      statusColor: Colors.orange,
-                      statusText: 'Sakit',
-                      icon: Icons.health_and_safety_outlined,
-                    ),
-                    _buildActivityItem(
-                      title: 'Kelahiran Anak Kambing',
-                      subtitle: 'Kambing Boer • Induk #088',
-                      time: 'Kemarin',
-                      statusColor: Colors.blue,
-                      statusText: 'Baru',
-                      icon: Icons.child_care_rounded,
-                    ),
+                    if (dashboardState.isLoading && dashboardState.recentActivities.isEmpty)
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24.0),
+                          child: CircularProgressIndicator(color: AppTheme.primaryColor),
+                        ),
+                      )
+                    else if (dashboardState.recentActivities.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.assignment_outlined,
+                                size: 48,
+                                color: Colors.grey.shade300,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Belum Ada Aktivitas',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ...dashboardState.recentActivities.map(
+                        (activity) => _buildActivityItem(
+                          title: activity.title,
+                          subtitle: activity.subtitle,
+                          time: activity.time,
+                          statusColor: activity.statusColor,
+                          statusText: activity.statusText,
+                          icon: activity.icon,
+                        ),
+                      ),
                     const SizedBox(height: 16),
                   ],
                 ),
