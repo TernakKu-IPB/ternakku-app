@@ -266,13 +266,11 @@ class _VaccinationHistoryFormScreenState
       return;
     }
 
-    if (_isVaccinated) {
+    if (_isVaccinated && _selectedVaccinationDate.isAfter(DateTime.now())) {
       const msg = 'Maksimal pilih hari ini jika ternak sudah divaksin';
-      if (_selectedVaccinationDate.isAfter(DateTime.now())) {
-        setState(() {
-          _serverErrors['vaccinationDate'] = msg;
-        });
-      }
+      setState(() {
+        _serverErrors['vaccinationDate'] = msg;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(msg), backgroundColor: Colors.red),
       );

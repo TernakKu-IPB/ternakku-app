@@ -44,7 +44,14 @@ class AnimalTypeStep extends StatelessWidget {
                 labelText: 'Nama Jenis Ternak',
                 hintText: 'Contoh: Kuda Poni',
               ),
-              validator: (val) => val == null || val.isEmpty ? 'Tidak boleh kosong' : null,
+              validator: (val) { 
+                if (val != null) {
+                  if (val.length < 2) return 'Minimal 2 karakter';
+                  if (val.length > 100) return 'Maksimal 100 karakter';
+                  return null;
+                }
+                return 'Minimal 2 karakter';
+              },
             ),
           ),
           actions: [
