@@ -211,28 +211,33 @@ class DashboardScreen extends ConsumerWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Status Peternakan',
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.white.withValues(alpha: 0.8),
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Status Peternakan',
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.white.withValues(alpha: 0.8),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            dashboardState.farmName,
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              dashboardState.farmName,
+                                              maxLines: 1, 
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
+                                      const SizedBox(width: 12),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
@@ -348,7 +353,9 @@ class DashboardScreen extends ConsumerWidget {
                           subtitle: 'Profil & Kategori',
                           icon: Icons.home_work_outlined,
                           color: AppTheme.secondaryColor,
-                          onTap: () {},
+                          onTap: () {
+                            context.push('/farm-info');
+                          },
                         ),
                       ],
                     ),
