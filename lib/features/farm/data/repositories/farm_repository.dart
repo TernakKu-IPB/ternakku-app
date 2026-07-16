@@ -154,4 +154,49 @@ class FarmRepository extends BaseRepository {
     final response = await _dio.get('${ApiConstants.vaccine}/$id');
     return response.data['data'];
   }
-}
+
+  // 8. Update & Delete custom animal type
+  Future<Map<String, dynamic>> updateCustomAnimalType(int id, String code, String label) async {
+    final response = await _dio.patch(
+      '${ApiConstants.animalType}/$id',
+      data: {'code': code, 'label': label},
+    );
+    return response.data;
+  }
+
+  Future<void> deleteCustomAnimalType(int id) async {
+    return request(() async {
+      await _dio.delete('${ApiConstants.animalType}/$id');
+    });
+  }
+
+  // 9. Update & Delete custom condition type
+  Future<Map<String, dynamic>> updateCustomConditionType(int id, String code, String label) async {
+    final response = await _dio.patch(
+      '${ApiConstants.conditionType}/$id',
+      data: {'code': code, 'label': label},
+    );
+    return response.data;
+  }
+
+  Future<void> deleteCustomConditionType(int id) async {
+    return request(() async {
+      await _dio.delete('${ApiConstants.conditionType}/$id');
+    });
+  }
+
+  // 10. Update & Delete custom vaccine
+  Future<Map<String, dynamic>> updateCustomVaccine(int id, String code, String name) async {
+    final response = await _dio.patch(
+      '${ApiConstants.vaccine}/$id',
+      data: {'code': code, 'name': name},
+    );
+    return response.data;
+  }
+
+  Future<void> deleteCustomVaccine(int id) async {
+    return request(() async {
+      await _dio.delete('${ApiConstants.vaccine}/$id');
+    });
+  }
+}

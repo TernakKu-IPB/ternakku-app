@@ -21,6 +21,7 @@ import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/dashboard_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/reset_password_screen.dart';
+import 'package:ternakku_app/features/farm/presentation/screens/farm_info_screen.dart';
 
 final goRouter = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -143,6 +144,10 @@ final goRouter = Provider<GoRouter>((ref) {
           final history = state.extra as VaccinationHistoryModel;
           return VaccinationHistoryDetailScreen(history: history);
         },
+      ),
+      GoRoute(
+        path: '/farm-info',
+        builder: (context, state) => const FarmInfoScreen(),
       ),
     ],
   );
