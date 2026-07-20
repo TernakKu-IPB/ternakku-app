@@ -81,6 +81,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     labelText: 'Nama pengguna atau email',
+                    errorMaxLines: 2,
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   onChanged: (_) {

@@ -144,6 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Nama pengguna / email',
                       hintText: 'Masukkan nama pengguna atau email',
+                      errorMaxLines: 2,
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                     onChanged: (value) {
@@ -172,6 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Kata sandi',
                       hintText: 'Masukkan kata sandi',
+                      errorMaxLines: 2,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(

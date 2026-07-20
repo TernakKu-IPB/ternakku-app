@@ -147,6 +147,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ),
                   decoration: const InputDecoration(
                     hintText: '000000',
+                    errorMaxLines: 2,
                     counterText: '',
                   ),
                   onChanged: (value) {

@@ -122,21 +122,21 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                         ),
                         // Tombol Aksi Notifikasi
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary, size: 22),
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Belum ada notifikasi baru')),
-                              );
-                            },
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(12),
+                        //     border: Border.all(color: Colors.grey.shade200),
+                        //   ),
+                        //   child: IconButton(
+                        //     icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary, size: 22),
+                        //     onPressed: () {
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //         const SnackBar(content: Text('Belum ada notifikasi baru')),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(width: 8),
                         // Tombol Logout
                         Container(

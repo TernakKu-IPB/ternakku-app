@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ternakku_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ternakku_app/features/dashboard_provider.dart';
 import '../../../../core/services/token_service.dart';
 import '../../data/repositories/auth_repository.dart';
 
@@ -33,6 +34,7 @@ class AuthController {
 
     // Muat ulang auth state
     ref.invalidate(authProvider);
+    ref.invalidate(dashboardProvider);
     
     return response['message'];
   }
@@ -61,6 +63,7 @@ class AuthController {
 
     // Muat ulang auth state
     ref.invalidate(authProvider);
+    ref.invalidate(dashboardProvider);
 
     // Mengembalikan pesan sukses dari API agar bisa ditampilkan di UI
     return response['message'];
@@ -70,6 +73,7 @@ class AuthController {
     final response = await _repository.logout();
     await _tokenService.clearTokens();
     ref.invalidate(authProvider);
+    ref.invalidate(dashboardProvider);
     return response['message'];
   }
 
@@ -110,6 +114,7 @@ class AuthController {
     );
 
     ref.invalidate(authProvider);
+    ref.invalidate(dashboardProvider);
     
     return response['message'];
   }

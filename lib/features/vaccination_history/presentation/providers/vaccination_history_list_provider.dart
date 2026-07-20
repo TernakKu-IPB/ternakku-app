@@ -9,7 +9,6 @@ class VaccinationHistoryListState {
   final bool isLoadMore;
   final bool hasMore;
   final int offset;
-  final String query;
   final int? livestockId;
   final int? vaccineId;
   final bool? isVaccinatedFilter;
@@ -22,7 +21,6 @@ class VaccinationHistoryListState {
     this.isLoadMore = false,
     this.hasMore = true,
     this.offset = 0,
-    this.query = '',
     this.livestockId,
     this.vaccineId,
     this.isVaccinatedFilter,
@@ -36,7 +34,6 @@ class VaccinationHistoryListState {
     bool? isLoadMore,
     bool? hasMore,
     int? offset,
-    String? query,
     Object? livestockId = _sentinel,
     Object? vaccineId = _sentinel,
     Object? isVaccinatedFilter = _sentinel,
@@ -49,7 +46,6 @@ class VaccinationHistoryListState {
       isLoadMore: isLoadMore ?? this.isLoadMore,
       hasMore: hasMore ?? this.hasMore,
       offset: offset ?? this.offset,
-      query: query ?? this.query,
       livestockId:
           livestockId == _sentinel ? this.livestockId : (livestockId as int?),
       vaccineId:
@@ -97,7 +93,6 @@ class VaccinationHistoryListNotifier
       final newItems = await _repository.getVaccinationHistories(
         limit: _limit,
         offset: isRefresh ? 0 : state.offset,
-        query: state.query,
         livestockId: state.livestockId,
         vaccineId: state.vaccineId,
         isVaccinated: state.isVaccinatedFilter,
@@ -133,12 +128,6 @@ class VaccinationHistoryListNotifier
   }
 
   // --- Fungsi Filter & Search ---
-
-  void updateQuery(String query) {
-    state = state.copyWith(query: query);
-    fetchHistories(isRefresh: true);
-  }
-
   void updateLivestockFilter(int? livestockId) {
     state = state.copyWith(livestockId: livestockId);
     fetchHistories(isRefresh: true);
@@ -161,7 +150,6 @@ class VaccinationHistoryListNotifier
 
   void clearFilters({bool isFilteredMode = false}) {
     state = VaccinationHistoryListState(
-      query: state.query,
       livestockId: isFilteredMode ? state.livestockId : null,
     );
     fetchHistories(isRefresh: true);

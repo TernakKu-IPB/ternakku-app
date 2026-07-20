@@ -44,51 +44,6 @@ class FarmRepository extends BaseRepository {
     });
   }
 
-  // 2. Tambah Master Data Kustom (Jenis Ternak)
-  Future<Map<String, dynamic>> addCustomAnimalType(String code, String label) async {
-    final response = await _dio.post(
-      ApiConstants.animalType,
-      data: {'code': code, 'label': label},
-    );
-    return response.data;
-  }
-
-  // 3. Tambah Master Data Kustom (Kondisi)
-  Future<Map<String, dynamic>> addCustomConditionType(String code, String label) async {
-    final response = await _dio.post(
-      ApiConstants.conditionType,
-      data: {'code': code, 'label': label},
-    );
-    return response.data;
-  }
-
-  // 4. Tambah Master Data Kustom (Vaksin)
-  Future<Map<String, dynamic>> addCustomVaccine(String code, String name) async {
-    final response = await _dio.post(
-      ApiConstants.vaccine,
-      data: {'code': code, 'name': name},
-    );
-    return response.data;
-  }
-
-  // 5. Ambil Template Jenis Ternak
-  Future<List<Map<String, dynamic>>> getAnimalTypeTemplates() async {
-    final response = await _dio.get(ApiConstants.animalTypeTemplate);
-    return List<Map<String, dynamic>>.from(response.data['data']['animalTypes']);
-  }
-
-  // 6. Ambil Template Kondisi
-  Future<List<Map<String, dynamic>>> getConditionTypeTemplates() async {
-    final response = await _dio.get(ApiConstants.conditionTypeTemplate);
-    return List<Map<String, dynamic>>.from(response.data['data']['conditionTypes']);
-  }
-
-  // 7. Ambil Template Vaksin
-  Future<List<Map<String, dynamic>>> getVaccineTemplates() async {
-    final response = await _dio.get(ApiConstants.vaccineTemplate);
-    return List<Map<String, dynamic>>.from(response.data['data']['vaccines']);
-  }
-
   Future<List<Map<String, dynamic>>> getAnimalTypes({
     int limit = 10,
     int offset = 0,
@@ -153,50 +108,5 @@ class FarmRepository extends BaseRepository {
   Future<Map<String, dynamic>> getVaccineDetail(int id) async {
     final response = await _dio.get('${ApiConstants.vaccine}/$id');
     return response.data['data'];
-  }
-
-  // 8. Update & Delete custom animal type
-  Future<Map<String, dynamic>> updateCustomAnimalType(int id, String code, String label) async {
-    final response = await _dio.patch(
-      '${ApiConstants.animalType}/$id',
-      data: {'code': code, 'label': label},
-    );
-    return response.data;
-  }
-
-  Future<void> deleteCustomAnimalType(int id) async {
-    return request(() async {
-      await _dio.delete('${ApiConstants.animalType}/$id');
-    });
-  }
-
-  // 9. Update & Delete custom condition type
-  Future<Map<String, dynamic>> updateCustomConditionType(int id, String code, String label) async {
-    final response = await _dio.patch(
-      '${ApiConstants.conditionType}/$id',
-      data: {'code': code, 'label': label},
-    );
-    return response.data;
-  }
-
-  Future<void> deleteCustomConditionType(int id) async {
-    return request(() async {
-      await _dio.delete('${ApiConstants.conditionType}/$id');
-    });
-  }
-
-  // 10. Update & Delete custom vaccine
-  Future<Map<String, dynamic>> updateCustomVaccine(int id, String code, String name) async {
-    final response = await _dio.patch(
-      '${ApiConstants.vaccine}/$id',
-      data: {'code': code, 'name': name},
-    );
-    return response.data;
-  }
-
-  Future<void> deleteCustomVaccine(int id) async {
-    return request(() async {
-      await _dio.delete('${ApiConstants.vaccine}/$id');
-    });
   }
 }

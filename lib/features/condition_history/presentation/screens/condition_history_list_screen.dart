@@ -28,7 +28,6 @@ class ConditionHistoryListScreen extends ConsumerStatefulWidget {
 class _ConditionHistoryListScreenState
     extends ConsumerState<ConditionHistoryListScreen> {
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -52,7 +51,6 @@ class _ConditionHistoryListScreenState
   @override
   void dispose() {
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -246,58 +244,6 @@ class _ConditionHistoryListScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search Bar
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _searchController,
-              style: GoogleFonts.poppins(fontSize: 14),
-              decoration: InputDecoration(
-                hintText: 'Cari nama ternak atau catatan...',
-                hintStyle: GoogleFonts.poppins(
-                    color: Colors.grey.shade400, fontSize: 14),
-                prefixIcon: const Icon(Icons.search,
-                    color: Color(0xFFF59E0B)),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          _searchController.clear();
-                          notifier.updateQuery('');
-                          FocusScope.of(context).unfocus();
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                      color: Color(0xFFF59E0B), width: 1.5),
-                ),
-              ),
-              onSubmitted: (value) => notifier.updateQuery(value),
-            ),
-          ),
-          const SizedBox(height: 14),
-
           // Filter Chips (Horizontal Scroll)
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -615,7 +561,6 @@ class _ConditionHistoryListScreenState
   }
 
   Widget _buildEmptyState() {
-    final hasFilters = _currentState.query.isNotEmpty || _hasActiveFilters;
     return Center(
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -629,7 +574,7 @@ class _ConditionHistoryListScreenState
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                hasFilters
+                _hasActiveFilters
                     ? Icons.search_off_rounded
                     : Icons.assignment_outlined,
                 size: 72,
@@ -638,7 +583,7 @@ class _ConditionHistoryListScreenState
             ),
             const SizedBox(height: 20),
             Text(
-              hasFilters ? 'Tidak Ada Hasil' : 'Belum Ada Catatan',
+              _hasActiveFilters ? 'Tidak Ada Hasil' : 'Belum Ada Catatan',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -649,7 +594,7 @@ class _ConditionHistoryListScreenState
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                hasFilters
+                _hasActiveFilters
                     ? 'Coba ubah kata kunci pencarian atau filter yang Anda gunakan.'
                     : 'Mulai catat kondisi ternak Anda setiap hari untuk rekam jejak yang lebih baik.',
                 textAlign: TextAlign.center,

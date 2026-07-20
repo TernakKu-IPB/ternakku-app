@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ternakku_app/core/network/api_exception.dart';
 import 'package:ternakku_app/core/validators/app_validators.dart';
+import 'package:ternakku_app/core/validators/password_rules.dart';
 import '../providers/auth_controller.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -60,13 +61,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(successMessage), // Misal: "Pendaftaran akun berhasil. Kode OTP..."
+            content: Text(successMessage),
             backgroundColor: Colors.green,
           ),
         );
-
-        // TODO: Arahkan ke Halaman Verifikasi OTP
-        // context.go('/verify-otp');
       } catch (e) {
         if (!mounted) return;
 
@@ -150,6 +148,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Nama lengkap',
                       hintText: 'Masukkan nama lengkap',
+                      errorMaxLines: 2,
                       prefixIcon: Icon(Icons.badge_outlined),
                     ),
                     onChanged: (value) {
@@ -176,6 +175,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Nama pengguna',
                       hintText: 'Masukkan nama pengguna',
+                      errorMaxLines: 2,
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                     onChanged: (value) {
@@ -203,6 +203,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       hintText: 'Masukkan email aktif',
+                      errorMaxLines: 2,
                       prefixIcon: Icon(Icons.email_outlined),
                     ),
                     onChanged: (value) {
@@ -230,6 +231,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Kata sandi',
                       hintText: 'Minimal 8 karakter',
+                      errorMaxLines: 2,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(_isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -238,9 +240,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     onChanged: (value) {
                       if (_serverErrors.containsKey('password')) {
-                        setState(() => _serverErrors.remove('password'));
-                        _formKey.currentState!.validate();
+                        _serverErrors.remove('password');
                       }
+                      setState(() {});
                     },
                     validator: (value) {
                       // 1. Cek dulu apakah ada error dari server
@@ -250,6 +252,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // 2. Jika tidak ada, jalankan validasi lokal
                       return AppValidators.password(value);
                     },
+                  ),
+                  const SizedBox(height: 8),
+                  Column(
+                    children: passwordRules.map((rule) {
+                      return _buildPasswordRequirement(
+                        rule.check(_passwordController.text),
+                        rule.description,
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(height: 16),
 
@@ -262,6 +273,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Konfirmasi kata sandi',
                       hintText: 'Ulangi kata sandi',
+                      errorMaxLines: 2,
                       prefixIcon: const Icon(Icons.lock_reset_outlined),
                       suffixIcon: IconButton(
                         icon: Icon(_isConfirmPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -303,6 +315,34 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordRequirement(
+    bool fulfilled,
+    String text,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Icon(
+            fulfilled ? Icons.check_circle : Icons.cancel,
+            size: 18,
+            color: fulfilled ? Colors.green : Colors.grey,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 13,
+                color: fulfilled ? Colors.green : Colors.grey.shade700,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

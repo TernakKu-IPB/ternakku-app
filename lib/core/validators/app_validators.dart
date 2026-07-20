@@ -1,3 +1,5 @@
+import 'package:ternakku_app/core/validators/password_rules.dart';
+
 class AppValidators {
   static String? identifier(String? value) {
     final identifier = value?.trim() ?? '';
@@ -51,28 +53,10 @@ class AppValidators {
   static String? password(String? value) {
     final password = value ?? '';
 
-    if (password.length < 8) {
-      return 'Minimal 8 karakter';
-    }
-
-    if (password.length > 64) {
-      return 'Maksimal 64 karakter';
-    }
-
-    if (!RegExp(r'[A-Z]').hasMatch(password)) {
-      return 'Setidaknya berisi satu huruf kapital';
-    }
-
-    if (!RegExp(r'[a-z]').hasMatch(password)) {
-      return 'Setidaknya berisi satu huruf kecil';
-    }
-
-    if (!RegExp(r'[0-9]').hasMatch(password)) {
-      return 'Setidaknya berisi satu angka';
-    }
-
-    if (!RegExp(r'[@$!%*?&]').hasMatch(password)) {
-      return 'Setidaknya berisi satu spesial karakter (@\$!%*?&)';
+    for (final rule in passwordRules) {
+      if (!rule.check(password)) {
+        return rule.description;
+      }
     }
 
     return null;

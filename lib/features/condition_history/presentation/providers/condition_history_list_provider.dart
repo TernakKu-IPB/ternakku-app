@@ -9,7 +9,6 @@ class ConditionHistoryListState {
   final bool isLoadMore;
   final bool hasMore;
   final int offset;
-  final String query;
   final int? livestockId;
   final int? conditionTypeId;
   final DateTime? startDate;
@@ -21,7 +20,6 @@ class ConditionHistoryListState {
     this.isLoadMore = false,
     this.hasMore = true,
     this.offset = 0,
-    this.query = '',
     this.livestockId,
     this.conditionTypeId,
     this.startDate,
@@ -34,7 +32,6 @@ class ConditionHistoryListState {
     bool? isLoadMore,
     bool? hasMore,
     int? offset,
-    String? query,
     Object? livestockId = _sentinel,
     Object? conditionTypeId = _sentinel,
     Object? startDate = _sentinel,
@@ -46,7 +43,6 @@ class ConditionHistoryListState {
       isLoadMore: isLoadMore ?? this.isLoadMore,
       hasMore: hasMore ?? this.hasMore,
       offset: offset ?? this.offset,
-      query: query ?? this.query,
       livestockId: livestockId == _sentinel ? this.livestockId : (livestockId as int?),
       conditionTypeId: conditionTypeId == _sentinel ? this.conditionTypeId : (conditionTypeId as int?),
       startDate: startDate == _sentinel ? this.startDate : (startDate as DateTime?),
@@ -85,7 +81,6 @@ class ConditionHistoryListNotifier extends StateNotifier<ConditionHistoryListSta
       final newItems = await _repository.getConditionHistories(
         limit: _limit,
         offset: isRefresh ? 0 : state.offset,
-        query: state.query,
         livestockId: state.livestockId,
         conditionTypeId: state.conditionTypeId,
         startDate: state.startDate,
@@ -105,12 +100,6 @@ class ConditionHistoryListNotifier extends StateNotifier<ConditionHistoryListSta
   }
 
   // --- Fungsi Filter & Search ---
-
-  void updateQuery(String query) {
-    state = state.copyWith(query: query);
-    fetchHistories(isRefresh: true);
-  }
-
   void updateLivestockFilter(int? livestockId) {
     state = state.copyWith(livestockId: livestockId);
     fetchHistories(isRefresh: true);
@@ -129,7 +118,6 @@ class ConditionHistoryListNotifier extends StateNotifier<ConditionHistoryListSta
   void clearFilters({ bool isFilteredMode = false }) {
     // Pertahankan livestockId yang sudah ada (misalnya saat dibuka dari detail ternak)
     state = ConditionHistoryListState(
-      query: state.query,
       livestockId: isFilteredMode ? state.livestockId : null,
     );
     fetchHistories(isRefresh: true);

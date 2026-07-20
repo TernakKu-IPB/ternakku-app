@@ -27,7 +27,6 @@ class VaccinationHistoryListScreen extends ConsumerStatefulWidget {
 class _VaccinationHistoryListScreenState
     extends ConsumerState<VaccinationHistoryListScreen> {
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _searchController = TextEditingController();
 
   bool get _isFilteredMode => widget.livestockId != null;
 
@@ -44,7 +43,7 @@ class _VaccinationHistoryListScreenState
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        ref.read(vaccinationHistoryListProvider.notifier).fetchHistories();
+        _currentNotifier.fetchHistories();
       }
     });
   }
@@ -52,7 +51,6 @@ class _VaccinationHistoryListScreenState
   @override
   void dispose() {
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -237,58 +235,6 @@ class _VaccinationHistoryListScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search Bar
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _searchController,
-              style: GoogleFonts.poppins(fontSize: 14),
-              decoration: InputDecoration(
-                hintText: 'Cari nama ternak atau vaksin...',
-                hintStyle: GoogleFonts.poppins(
-                    color: Colors.grey.shade400, fontSize: 14),
-                prefixIcon: const Icon(Icons.search,
-                    color: Color(0xFFEF4444)),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentNotifier.updateQuery('');
-                          FocusScope.of(context).unfocus();
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFEF4444), width: 1.5),
-                ),
-              ),
-              onSubmitted: (value) => _currentNotifier.updateQuery(value),
-            ),
-          ),
-          const SizedBox(height: 14),
-
           // Filter Chips (Horizontal Scroll)
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -646,8 +592,6 @@ class _VaccinationHistoryListScreenState
   }
 
   Widget _buildEmptyState() {
-    final hasFilters = ref.read(vaccinationHistoryListProvider).query.isNotEmpty ||
-        _hasActiveFilters;
     return Center(
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -661,7 +605,7 @@ class _VaccinationHistoryListScreenState
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                hasFilters
+                _hasActiveFilters
                     ? Icons.search_off_rounded
                     : Icons.medical_services_outlined,
                 size: 72,
@@ -670,7 +614,7 @@ class _VaccinationHistoryListScreenState
             ),
             const SizedBox(height: 20),
             Text(
-              hasFilters ? 'Tidak Ada Hasil' : 'Belum Ada Rekam Medis',
+              _hasActiveFilters ? 'Tidak Ada Hasil' : 'Belum Ada Rekam Medis',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -681,7 +625,7 @@ class _VaccinationHistoryListScreenState
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                hasFilters
+                _hasActiveFilters
                     ? 'Coba ubah kata kunci pencarian atau filter yang Anda gunakan.'
                     : 'Mulai jadwalkan vaksinasi untuk memastikan kesehatan ternak Anda terjaga.',
                 textAlign: TextAlign.center,

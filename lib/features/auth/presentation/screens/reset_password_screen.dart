@@ -96,6 +96,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Kata sandi baru',
+                    errorMaxLines: 2,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -119,6 +120,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   obscureText: !_isPasswordVisible,
                   decoration: const InputDecoration(
                     labelText: 'Konfirmasi kata sandi baru',
+                    errorMaxLines: 2,
                     prefixIcon: Icon(Icons.lock_reset),
                   ),
                   validator: (value) {
