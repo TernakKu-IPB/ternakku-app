@@ -44,26 +44,41 @@ class _VaccinationHistoryDetailScreenState
   // HELPERS
   // ==========================================
 
-  bool get _isOverdue =>
-      !_current.isVaccinated &&
-      _current.vaccinationDate.isBefore(DateTime.now());
+  int get _daysUntilVaccination {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-  bool get _isUpcoming {
-    if (_current.isVaccinated) return false;
-    final diff =
-        _current.vaccinationDate.difference(DateTime.now()).inDays;
-    return diff >= 0 && diff <= 7;
+    final vaccinationDate = DateTime(
+      _current.vaccinationDate.year,
+      _current.vaccinationDate.month,
+      _current.vaccinationDate.day,
+    );
+
+    return vaccinationDate.difference(today).inDays;
   }
 
+  bool get _isToday =>
+      !_current.isVaccinated && _daysUntilVaccination == 0;
+
+  bool get _isOverdue =>
+      !_current.isVaccinated && _daysUntilVaccination < 0;
+
+  bool get _isUpcoming =>
+      !_current.isVaccinated &&
+      _daysUntilVaccination > 0 &&
+      _daysUntilVaccination <= 7;
+
   Color get _statusColor {
-    if (_current.isVaccinated) return const Color(0xFF22C55E);
-    if (_isOverdue) return const Color(0xFFEF4444);
-    if (_isUpcoming) return const Color(0xFFF59E0B);
-    return const Color(0xFF3B82F6);
+    if (_current.isVaccinated) return const Color(0xFF22C55E); // Hijau
+    if (_isToday) return const Color(0xFFF97316); // Oranye
+    if (_isOverdue) return const Color(0xFFEF4444); // Merah
+    if (_isUpcoming) return const Color(0xFFF59E0B); // Amber
+    return const Color(0xFF3B82F6); // Biru
   }
 
   IconData get _statusIcon {
     if (_current.isVaccinated) return Icons.check_circle_rounded;
+    if (_isToday) return Icons.today_rounded;
     if (_isOverdue) return Icons.warning_amber_rounded;
     if (_isUpcoming) return Icons.notification_important_rounded;
     return Icons.schedule_rounded;
@@ -71,6 +86,7 @@ class _VaccinationHistoryDetailScreenState
 
   String get _statusLabel {
     if (_current.isVaccinated) return 'Sudah Divaksinasi';
+    if (_isToday) return 'Hari Ini';
     if (_isOverdue) return 'Terlambat';
     if (_isUpcoming) return 'Segera Divaksinasi';
     return 'Terjadwal';

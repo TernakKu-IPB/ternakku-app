@@ -360,198 +360,193 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
               return label.contains(searchQuery.toLowerCase());
             }).toList();
 
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.65,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 12),
-                    // Drag Handle Indicator
-                    Container(
-                      width: 40,
-                      height: 4,
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  // Drag Handle Indicator
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Header Sheet
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Pilih Jenis Ternak',
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        if (_currentState.animalTypeId != null)
+                          TextButton(
+                            onPressed: () {
+                              _currentNotifier.updateAnimalType(-1);
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Reset',
+                              style: GoogleFonts.poppins(
+                                color: Colors.red.shade600,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Search Bar inside sheet
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    // Header Sheet
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Pilih Jenis Ternak',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          if (_currentState.animalTypeId != null)
-                            TextButton(
-                              onPressed: () {
-                                _currentNotifier.updateAnimalType(-1);
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                'Reset',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.red.shade600,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Search Bar inside sheet
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: TextField(
-                          controller: textController,
-                          onChanged: (val) {
-                            setStateBottomSheet(() {
-                              searchQuery = val;
-                            });
-                          },
-                          style: GoogleFonts.poppins(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Cari jenis ternak...',
-                            hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400, fontSize: 14),
-                            prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
+                      child: TextField(
+                        controller: textController,
+                        onChanged: (val) {
+                          setStateBottomSheet(() {
+                            searchQuery = val;
+                          });
+                        },
+                        style: GoogleFonts.poppins(fontSize: 14),
+                        decoration: InputDecoration(
+                          hintText: 'Cari jenis ternak...',
+                          hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400, fontSize: 14),
+                          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                  ),
+                  const SizedBox(height: 16),
 
-                    // List of Options
-                    Expanded(
-                      child: filteredTypes.isEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.search_off_rounded, size: 48, color: Colors.grey.shade400),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Jenis ternak tidak ditemukan',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.grey.shade500,
-                                      fontSize: 14,
-                                    ),
+                  // List of Options
+                  Expanded(
+                    child: filteredTypes.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.search_off_rounded, size: 48, color: Colors.grey.shade400),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Jenis ternak tidak ditemukan',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 14,
                                   ),
-                                ],
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                              itemCount: filteredTypes.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  final isAllSelected = _currentState.animalTypeId == null;
-                                  return ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                                    leading: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: isAllSelected 
-                                            ? AppTheme.primaryColor.withValues(alpha: 0.1) 
-                                            : Colors.grey.shade100,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.all_inclusive_rounded,
-                                        color: isAllSelected ? AppTheme.primaryColor : Colors.grey.shade600,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    title: Text(
-                                      'Semua Jenis Ternak',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: isAllSelected ? FontWeight.w600 : FontWeight.w500,
-                                        color: isAllSelected ? AppTheme.primaryColor : AppTheme.textPrimary,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    trailing: isAllSelected
-                                        ? const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor)
-                                        : null,
-                                    onTap: () {
-                                      _currentNotifier.updateAnimalType(-1);
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                }
-
-                                final type = filteredTypes[index - 1];
-                                final isSelected = _currentState.animalTypeId == type['id'];
-
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            itemCount: filteredTypes.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                final isAllSelected = _currentState.animalTypeId == null;
                                 return ListTile(
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                                   leading: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: isSelected 
+                                      color: isAllSelected 
                                           ? AppTheme.primaryColor.withValues(alpha: 0.1) 
                                           : Colors.grey.shade100,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
-                                      _getAnimalIcon(type['label']),
-                                      color: isSelected ? AppTheme.primaryColor : Colors.grey.shade600,
+                                      Icons.all_inclusive_rounded,
+                                      color: isAllSelected ? AppTheme.primaryColor : Colors.grey.shade600,
                                       size: 20,
                                     ),
                                   ),
                                   title: Text(
-                                    type['label'],
+                                    'Semua Jenis Ternak',
                                     style: GoogleFonts.poppins(
-                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                                      color: isSelected ? AppTheme.primaryColor : AppTheme.textPrimary,
+                                      fontWeight: isAllSelected ? FontWeight.w600 : FontWeight.w500,
+                                      color: isAllSelected ? AppTheme.primaryColor : AppTheme.textPrimary,
                                       fontSize: 14,
                                     ),
                                   ),
-                                  trailing: isSelected
+                                  trailing: isAllSelected
                                       ? const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor)
                                       : null,
                                   onTap: () {
-                                    _currentNotifier.updateAnimalType(type['id']);
+                                    _currentNotifier.updateAnimalType(-1);
                                     Navigator.pop(context);
                                   },
                                 );
-                              },
-                            ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
+                              }
+
+                              final type = filteredTypes[index - 1];
+                              final isSelected = _currentState.animalTypeId == type['id'];
+
+                              return ListTile(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                                leading: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? AppTheme.primaryColor.withValues(alpha: 0.1) 
+                                        : Colors.grey.shade100,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    _getAnimalIcon(type['label']),
+                                    color: isSelected ? AppTheme.primaryColor : Colors.grey.shade600,
+                                    size: 20,
+                                  ),
+                                ),
+                                title: Text(
+                                  type['label'],
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                    color: isSelected ? AppTheme.primaryColor : AppTheme.textPrimary,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                trailing: isSelected
+                                    ? const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor)
+                                    : null,
+                                onTap: () {
+                                  _currentNotifier.updateAnimalType(type['id']);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
             );
           },

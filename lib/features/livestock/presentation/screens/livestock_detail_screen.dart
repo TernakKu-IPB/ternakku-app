@@ -918,29 +918,46 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
     }
   }
 
-  // ==========================================
-  // HELPERS VAKSINASI
-  // ==========================================
+  int _daysUntilVaccination(VaccinationHistoryModel item) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    final vaccinationDate = DateTime(
+      item.vaccinationDate.year,
+      item.vaccinationDate.month,
+      item.vaccinationDate.day,
+    );
+
+    return vaccinationDate.difference(today).inDays;
+  }
+
+  bool _isToday(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return false;
+    return _daysUntilVaccination(item) == 0;
+  }
+
   bool _isOverdue(VaccinationHistoryModel item) {
     if (item.isVaccinated) return false;
-    return item.vaccinationDate.isBefore(DateTime.now());
+    return _daysUntilVaccination(item) < 0;
   }
 
   bool _isUpcoming(VaccinationHistoryModel item) {
     if (item.isVaccinated) return false;
-    final diff = item.vaccinationDate.difference(DateTime.now()).inDays;
-    return diff >= 0 && diff <= 7;
+    final diff = _daysUntilVaccination(item);
+    return diff > 0 && diff <= 7;
   }
 
   Color _getVaccinationColor(VaccinationHistoryModel item) {
-    if (item.isVaccinated) return const Color(0xFF22C55E);
-    if (_isOverdue(item)) return const Color(0xFFEF4444);
-    if (_isUpcoming(item)) return const Color(0xFFF59E0B);
-    return const Color(0xFF3B82F6);
+    if (item.isVaccinated) return const Color(0xFF22C55E); // Hijau
+    if (_isToday(item)) return const Color(0xFFF97316); // Oranye
+    if (_isOverdue(item)) return const Color(0xFFEF4444); // Merah
+    if (_isUpcoming(item)) return const Color(0xFFF59E0B); // Amber
+    return const Color(0xFF3B82F6); // Biru
   }
 
   IconData _getVaccinationIcon(VaccinationHistoryModel item) {
     if (item.isVaccinated) return Icons.check_circle_rounded;
+    if (_isToday(item)) return Icons.today_rounded;
     if (_isOverdue(item)) return Icons.warning_amber_rounded;
     if (_isUpcoming(item)) return Icons.notification_important_rounded;
     return Icons.schedule_rounded;
@@ -948,6 +965,7 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
 
   String _getVaccinationStatusLabel(VaccinationHistoryModel item) {
     if (item.isVaccinated) return 'Selesai';
+    if (_isToday(item)) return 'Hari Ini';
     if (_isOverdue(item)) return 'Terlambat';
     if (_isUpcoming(item)) return 'Segera';
     return 'Terjadwal';

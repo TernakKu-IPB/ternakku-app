@@ -37,7 +37,7 @@ class VaccinationHistoryRepository extends BaseRepository {
           if (livestockId != null && !livestockId.isNegative)
             'livestockId': livestockId,
           if (vaccineId != null && vaccineId > 0) 'vaccineId': vaccineId,
-          if (isVaccinated != null) 'isVaccinated': isVaccinated,
+          'isVaccinated': ?isVaccinated,
           if (startDate != null)
             'startDate': startDate.toIso8601String().split('T').first,
           if (endDate != null)

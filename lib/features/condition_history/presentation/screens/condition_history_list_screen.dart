@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ternakku_app/core/theme/app_theme.dart';
 import 'package:ternakku_app/features/condition_history/domain/models/condition_history_model.dart';
 import 'package:ternakku_app/features/farm/data/repositories/farm_repository.dart';
+import 'package:ternakku_app/features/livestock/presentation/providers/livestock_list_provider.dart';
 import '../providers/condition_history_list_provider.dart';
 
 class ConditionHistoryListScreen extends ConsumerStatefulWidget {
@@ -28,6 +29,7 @@ class ConditionHistoryListScreen extends ConsumerStatefulWidget {
 class _ConditionHistoryListScreenState
     extends ConsumerState<ConditionHistoryListScreen> {
   final ScrollController _scrollController = ScrollController();
+  String? _selectedLivestockName;
 
   @override
   void initState() {
@@ -151,7 +153,12 @@ class _ConditionHistoryListScreenState
               ? (state.conditionTypeId != null || state.startDate != null || state.endDate != null)
               : _hasActiveFilters)
             TextButton.icon(
-              onPressed: () => notifier.clearFilters(isFilteredMode: _isFilteredMode),
+              onPressed: () {
+                notifier.clearFilters(isFilteredMode: _isFilteredMode);
+                setState(() {
+                  _selectedLivestockName = null;
+                });
+              },
               icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
               label: Text(
                 'Reset',
@@ -260,6 +267,20 @@ class _ConditionHistoryListScreenState
                   onTap: () => _showDateRangeFilter(context, notifier, state),
                 ),
                 const SizedBox(width: 8),
+
+                if (!_isFilteredMode) ...[
+                  _buildFilterChip(
+                    label: _selectedLivestockName != null
+                        ? 'Ternak: $_selectedLivestockName'
+                        : 'Semua Ternak',
+                    isSelected: state.livestockId != null,
+                    icon: Icons.pets_rounded,
+                    iconOnRight: true,
+                    trailingIcon: Icons.keyboard_arrow_down_rounded,
+                    onTap: () => _showLivestockFilter(context),
+                  ),
+                  const SizedBox(width: 8),
+                ],
 
                 // Divider
                 Container(
@@ -674,22 +695,18 @@ class _ConditionHistoryListScreenState
               return label.contains(searchQuery.toLowerCase());
             }).toList();
 
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(24)),
               ),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.65,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: Column(
+                children: [
                     const SizedBox(height: 12),
                     Container(
                       width: 40,
@@ -879,8 +896,251 @@ class _ConditionHistoryListScreenState
                     const SizedBox(height: 16),
                   ],
                 ),
+              );
+          },
+        );
+      },
+    );
+  }
+
+  void _showLivestockFilter(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(livestockListProvider.notifier).updateQuery('');
+    });
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final livestockState = ref.watch(livestockListProvider);
+            final notifier = ref.read(livestockListProvider.notifier);
+
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(24)),
               ),
-            );
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: Column(
+                children: [
+                    const SizedBox(height: 12),
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Pilih Ternak',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          if (_currentState.livestockId != null)
+                            TextButton(
+                              onPressed: () {
+                                _currentNotifier.updateLivestockFilter(null);
+                                setState(() {
+                                  _selectedLivestockName = null;
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Reset',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.red.shade600,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: TextField(
+                          onChanged: (val) => notifier.updateQuery(val),
+                          style: GoogleFonts.poppins(fontSize: 14),
+                          decoration: InputDecoration(
+                            hintText: 'Cari nama atau tag ternak...',
+                            hintStyle: GoogleFonts.poppins(
+                                color: Colors.grey.shade400, fontSize: 14),
+                            prefixIcon:
+                                const Icon(Icons.search, color: Colors.grey),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: livestockState.isLoading && livestockState.livestocks.isEmpty
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xFFF59E0B),
+                              ),
+                            )
+                          : livestockState.livestocks.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Ternak tidak ditemukan',
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.grey.shade500),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 8),
+                                  itemCount: livestockState.livestocks.length + 1,
+                                  itemBuilder: (context, idx) {
+                                    if (idx == 0) {
+                                      final isAll =
+                                          _currentState.livestockId == null;
+                                      return ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                        leading: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: isAll
+                                                ? const Color(0xFFF59E0B)
+                                                    .withValues(alpha: 0.1)
+                                                : Colors.grey.shade100,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.all_inclusive_rounded,
+                                            color: isAll
+                                                ? const Color(0xFFF59E0B)
+                                                : Colors.grey.shade600,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          'Semua Ternak',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: isAll
+                                                ? FontWeight.w600
+                                                : FontWeight.w500,
+                                            color: isAll
+                                                ? const Color(0xFFF59E0B)
+                                                : AppTheme.textPrimary,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        trailing: isAll
+                                            ? const Icon(
+                                                Icons.check_circle_rounded,
+                                                color: Color(0xFFF59E0B),
+                                              )
+                                            : null,
+                                        onTap: () {
+                                          _currentNotifier
+                                              .updateLivestockFilter(null);
+                                          setState(() {
+                                            _selectedLivestockName = null;
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    }
+                                    final item = livestockState.livestocks[idx - 1];
+                                    final isSelected =
+                                        _currentState.livestockId == item.id;
+                                    return ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                      leading: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? const Color(0xFFF59E0B)
+                                                  .withValues(alpha: 0.1)
+                                              : Colors.grey.shade100,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.pets_rounded,
+                                          color: isSelected
+                                              ? const Color(0xFFF59E0B)
+                                              : Colors.grey.shade600,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        item.name ?? 'Tanpa Nama',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: isSelected
+                                              ? FontWeight.w600
+                                              : FontWeight.w500,
+                                          color: isSelected
+                                              ? const Color(0xFFF59E0B)
+                                              : AppTheme.textPrimary,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      subtitle: item.tagId != null
+                                          ? Text(
+                                              'Tag: ${item.tagId}',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                color: Colors.grey.shade500,
+                                              ),
+                                            )
+                                          : null,
+                                      trailing: isSelected
+                                          ? const Icon(
+                                              Icons.check_circle_rounded,
+                                              color: Color(0xFFF59E0B),
+                                            )
+                                          : null,
+                                      onTap: () {
+                                        _currentNotifier.updateLivestockFilter(
+                                            item.id);
+                                        setState(() {
+                                          _selectedLivestockName = item.name;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
           },
         );
       },

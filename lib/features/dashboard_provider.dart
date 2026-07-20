@@ -176,26 +176,40 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         final lsName = history.livestock?['name'] as String? ?? 'Ternak';
         final lsTag = history.livestock?['tagId'] as String?;
 
-        final isOverdue = !history.isVaccinated &&
-            history.vaccinationDate.isBefore(DateTime.now());
-        final diff = history.vaccinationDate.difference(DateTime.now()).inDays;
-        final isUpcoming = !history.isVaccinated && diff >= 0 && diff <= 7;
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
+
+        final vaccinationDate = DateTime(
+          history.vaccinationDate.year,
+          history.vaccinationDate.month,
+          history.vaccinationDate.day,
+        );
+
+        final diff = vaccinationDate.difference(today).inDays;
+
+        final isToday = !history.isVaccinated && diff == 0;
+        final isOverdue = !history.isVaccinated && diff < 0;
+        final isUpcoming = !history.isVaccinated && diff > 0 && diff <= 7;
 
         final statusText = history.isVaccinated
-            ? 'Selesai'
-            : isOverdue
-                ? 'Terlambat'
-                : isUpcoming
-                    ? 'Segera'
-                    : 'Terjadwal';
+          ? 'Selesai'
+          : isToday
+              ? 'Hari Ini'
+              : isOverdue
+                  ? 'Terlambat'
+                  : isUpcoming
+                      ? 'Segera'
+                      : 'Terjadwal';
 
         final statusColor = history.isVaccinated
-            ? const Color(0xFF22C55E)
-            : isOverdue
-                ? const Color(0xFFEF4444)
-                : isUpcoming
-                    ? const Color(0xFFF59E0B)
-                    : const Color(0xFF3B82F6);
+          ? const Color(0xFF22C55E)
+          : isToday
+              ? const Color(0xFFF97316)
+              : isOverdue
+                  ? const Color(0xFFEF4444)
+                  : isUpcoming
+                      ? const Color(0xFFF59E0B)
+                      : const Color(0xFF3B82F6);
 
         activities.add(DashboardActivityItem(
           title: 'Suntik Vaksin $vaccineName',
