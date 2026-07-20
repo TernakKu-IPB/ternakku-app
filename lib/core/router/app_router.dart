@@ -109,13 +109,24 @@ final goRouter = Provider<GoRouter>((ref) {
       // ---- Catatan Harian (Condition History) ----
       GoRoute(
         path: '/condition-history',
-        builder: (context, state) => const ConditionHistoryListScreen(),
+        builder: (context, state) {
+          // Bisa dibuka tanpa extra (dari nav bottom), atau dengan extra map berisi
+          // {livestockId: int, livestockName: String} saat dibuka dari livestock detail
+          final extra = state.extra as Map<String, dynamic>?;
+          return ConditionHistoryListScreen(
+            livestockId: extra?['livestockId'] as int?,
+            livestockName: extra?['livestockName'] as String?,
+          );
+        },
       ),
       GoRoute(
         path: '/condition-history/form',
         builder: (context, state) {
           final historyToEdit = state.extra as ConditionHistoryModel?;
-          return ConditionHistoryFormScreen(history: historyToEdit);
+          final livestockId = int.tryParse(
+            state.uri.queryParameters['livestockId'] ?? '',
+          );
+          return ConditionHistoryFormScreen(history: historyToEdit, livestockId: livestockId);
         },
       ),
       GoRoute(
@@ -129,13 +140,22 @@ final goRouter = Provider<GoRouter>((ref) {
       // ---- Rekam Medis (Vaccination History) ----
       GoRoute(
         path: '/vaccination-history',
-        builder: (context, state) => const VaccinationHistoryListScreen(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return VaccinationHistoryListScreen(
+            livestockId: extra?['livestockId'] as int?,
+            livestockName: extra?['livestockName'] as String?,
+          );
+        },
       ),
       GoRoute(
         path: '/vaccination-history/form',
         builder: (context, state) {
           final historyToEdit = state.extra as VaccinationHistoryModel?;
-          return VaccinationHistoryFormScreen(history: historyToEdit);
+          final livestockId = int.tryParse(
+            state.uri.queryParameters['livestockId'] ?? '',
+          );
+          return VaccinationHistoryFormScreen(history: historyToEdit, livestockId: livestockId);
         },
       ),
       GoRoute(

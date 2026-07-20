@@ -18,8 +18,9 @@ import 'package:ternakku_app/features/livestock/domain/models/livestock_model.da
 // =============================================================================
 class VaccinationHistoryFormScreen extends ConsumerStatefulWidget {
   final VaccinationHistoryModel? history; // null = Tambah, ada = Edit
+  final int? livestockId;
 
-  const VaccinationHistoryFormScreen({super.key, this.history});
+  const VaccinationHistoryFormScreen({super.key, this.history, this.livestockId});
 
   @override
   ConsumerState<VaccinationHistoryFormScreen> createState() =>
@@ -77,6 +78,31 @@ class _VaccinationHistoryFormScreenState
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadReferenceLabels();
       });
+    } else if (widget.livestockId != null) {
+      _selectedLivestockId = widget.livestockId;
+      _selectedLivestockLabel = 'Memuat data ...';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadLivestockLabelById(widget.livestockId!);
+      });
+    }
+  }
+
+  Future<void> _loadLivestockLabelById(int id) async {
+    try {
+      final repo = ref.read(livestockRepositoryProvider);
+      final livestock = await repo.getLivestockDetail(id);
+      if (mounted) {
+        setState(() {
+          final tag = livestock.tagId;
+          _selectedLivestockLabel = tag != null
+              ? '${livestock.name ?? 'Tanpa Nama'} ($tag)'
+              : livestock.name ?? 'Tanpa Nama';
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _selectedLivestockLabel = 'ID: $id');
+      }
     }
   }
 

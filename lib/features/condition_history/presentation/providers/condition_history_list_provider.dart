@@ -126,8 +126,12 @@ class ConditionHistoryListNotifier extends StateNotifier<ConditionHistoryListSta
     fetchHistories(isRefresh: true);
   }
 
-  void clearFilters() {
-    state = ConditionHistoryListState(query: state.query);
+  void clearFilters({ bool isFilteredMode = false }) {
+    // Pertahankan livestockId yang sudah ada (misalnya saat dibuka dari detail ternak)
+    state = ConditionHistoryListState(
+      query: state.query,
+      livestockId: isFilteredMode ? state.livestockId : null,
+    );
     fetchHistories(isRefresh: true);
   }
 }

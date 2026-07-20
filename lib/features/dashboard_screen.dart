@@ -339,8 +339,8 @@ class DashboardScreen extends ConsumerWidget {
                         ),
                         _buildMenuCard(
                           context,
-                          title: 'Rekam Medis',
-                          subtitle: 'Jadwal Vaksinasi',
+                          title: 'Vaksinasi',
+                          subtitle: 'Riwayat & Jadwal',
                           icon: Icons.medical_services_outlined,
                           color: const Color(0xFFEF4444),
                           onTap: () {

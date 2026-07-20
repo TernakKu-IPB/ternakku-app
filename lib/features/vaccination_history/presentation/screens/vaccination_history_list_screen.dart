@@ -10,7 +10,14 @@ import 'package:ternakku_app/features/vaccination_history/domain/models/vaccinat
 import '../providers/vaccination_history_list_provider.dart';
 
 class VaccinationHistoryListScreen extends ConsumerStatefulWidget {
-  const VaccinationHistoryListScreen({super.key});
+  final int? livestockId;
+  final String? livestockName;
+
+  const VaccinationHistoryListScreen({
+    super.key,
+    this.livestockId,
+    this.livestockName,
+  });
 
   @override
   ConsumerState<VaccinationHistoryListScreen> createState() =>
@@ -22,9 +29,18 @@ class _VaccinationHistoryListScreenState
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
+  bool get _isFilteredMode => widget.livestockId != null;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isFilteredMode) {
+        _currentNotifier.updateLivestockFilter(widget.livestockId!);
+      } else {
+        _currentNotifier.clearFilters();
+      }
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
@@ -88,13 +104,15 @@ class _VaccinationHistoryListScreenState
     return 'Terjadwal';
   }
 
+  VaccinationHistoryListNotifier get _currentNotifier => ref.read(vaccinationHistoryListProvider.notifier);
+  VaccinationHistoryListState get _currentState => ref.watch(vaccinationHistoryListProvider);
+
   bool get _hasActiveFilters {
-    final state = ref.read(vaccinationHistoryListProvider);
-    return state.vaccineId != null ||
-        state.livestockId != null ||
-        state.isVaccinatedFilter != null ||
-        state.startDate != null ||
-        state.endDate != null;
+    return _currentState.vaccineId != null ||
+        _currentState.livestockId != null ||
+        _currentState.isVaccinatedFilter != null ||
+        _currentState.startDate != null ||
+        _currentState.endDate != null;
   }
 
   // ==========================================
@@ -103,27 +121,32 @@ class _VaccinationHistoryListScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(vaccinationHistoryListProvider);
-    final notifier = ref.read(vaccinationHistoryListProvider.notifier);
     final vaccinesAsync = ref.watch(_vaccinesProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: Text(
-          'Rekam Medis',
+          _isFilteredMode
+              ? 'Vaksinasi: ${widget.livestockName ?? 'Ternak'}'
+              : 'Rekam Medis',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: _isFilteredMode ? 17 : 20,
             color: AppTheme.textPrimary,
           ),
         ),
         elevation: 0,
         backgroundColor: AppTheme.scaffoldBackground,
         actions: [
-          if (_hasActiveFilters)
+          if (_isFilteredMode
+              ? (_currentState.vaccineId != null ||
+                  _currentState.isVaccinatedFilter != null ||
+                  _currentState.startDate != null ||
+                  _currentState.endDate != null)
+              : _hasActiveFilters)
             TextButton.icon(
-              onPressed: () => notifier.clearFilters(),
+              onPressed: () => _currentNotifier.clearFilters(isFilteredMode: _isFilteredMode),
               icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
               label: Text(
                 'Reset',
@@ -134,7 +157,7 @@ class _VaccinationHistoryListScreenState
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/vaccination-history/form'),
+        onPressed: () => context.push('/vaccination-history/form${_isFilteredMode ? '?livestockId=${widget.livestockId}' : ''}'),
         backgroundColor: const Color(0xFFEF4444),
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add_rounded),
@@ -146,31 +169,32 @@ class _VaccinationHistoryListScreenState
       body: Column(
         children: [
           // --- Header (Search & Filter) ---
-          _buildSearchAndFilter(state, notifier, vaccinesAsync),
+          _buildSearchAndFilter(vaccinesAsync),
 
           // --- List ---
           Expanded(
             child: RefreshIndicator(
               color: const Color(0xFFEF4444),
-              onRefresh: () => notifier.fetchHistories(isRefresh: true),
-              child: state.isLoading
+              onRefresh: () => _currentNotifier.fetchHistories(isRefresh: true),
+              child: _currentState.isLoading
                   ? const Center(
                       child: CircularProgressIndicator(
                         color: Color(0xFFEF4444),
                       ),
                     )
-                  : state.histories.isEmpty
+                  : _currentState.histories.isEmpty
                       ? _buildEmptyState()
                       : ListView.separated(
                           controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 8, bottom: 100),
-                          itemCount: state.histories.length +
-                              (state.isLoadMore ? 1 : 0),
+                          itemCount: _currentState.histories.length +
+                              (_currentState.isLoadMore ? 1 : 0),
                           separatorBuilder: (_, _) =>
                               const SizedBox(height: 12),
                           itemBuilder: (context, index) {
-                            if (index == state.histories.length) {
+                            if (index == _currentState.histories.length) {
                               return const Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Center(
@@ -180,8 +204,8 @@ class _VaccinationHistoryListScreenState
                                 ),
                               );
                             }
-                            final item = state.histories[index];
-                            return _buildVaccinationCard(item, notifier);
+                            final item = _currentState.histories[index];
+                            return _buildVaccinationCard(item);
                           },
                         ),
             ),
@@ -196,8 +220,6 @@ class _VaccinationHistoryListScreenState
   // ==========================================
 
   Widget _buildSearchAndFilter(
-    VaccinationHistoryListState state,
-    VaccinationHistoryListNotifier notifier,
     AsyncValue<List<Map<String, dynamic>>> vaccinesAsync,
   ) {
     return Container(
@@ -240,7 +262,7 @@ class _VaccinationHistoryListScreenState
                         icon: const Icon(Icons.clear, color: Colors.grey),
                         onPressed: () {
                           _searchController.clear();
-                          notifier.updateQuery('');
+                          _currentNotifier.updateQuery('');
                           FocusScope.of(context).unfocus();
                         },
                       )
@@ -262,7 +284,7 @@ class _VaccinationHistoryListScreenState
                       const BorderSide(color: Color(0xFFEF4444), width: 1.5),
                 ),
               ),
-              onSubmitted: (value) => notifier.updateQuery(value),
+              onSubmitted: (value) => _currentNotifier.updateQuery(value),
             ),
           ),
           const SizedBox(height: 14),
@@ -275,25 +297,25 @@ class _VaccinationHistoryListScreenState
               children: [
                 // Filter Tanggal
                 _buildFilterChip(
-                  label: state.startDate != null
-                      ? '${DateFormat('dd/MM').format(state.startDate!)} - ${state.endDate != null ? DateFormat('dd/MM').format(state.endDate!) : '...'}'
+                  label: _currentState.startDate != null
+                      ? '${DateFormat('dd/MM').format(_currentState.startDate!)} - ${_currentState.endDate != null ? DateFormat('dd/MM').format(_currentState.endDate!) : '...'}'
                       : 'Semua Tanggal',
-                  isSelected: state.startDate != null,
+                  isSelected: _currentState.startDate != null,
                   icon: Icons.calendar_month_rounded,
-                  onTap: () => _showDateRangeFilter(context, notifier, state),
+                  onTap: () => _showDateRangeFilter(context),
                 ),
                 const SizedBox(width: 8),
 
                 // Filter Status Vaksinasi
                 _buildFilterChip(
-                  label: state.isVaccinatedFilter == null
+                  label: _currentState.isVaccinatedFilter == null
                       ? 'Semua Status'
-                      : state.isVaccinatedFilter!
+                      : _currentState.isVaccinatedFilter!
                           ? 'Sudah Vaksin'
                           : 'Belum Vaksin',
-                  isSelected: state.isVaccinatedFilter != null,
+                  isSelected: _currentState.isVaccinatedFilter != null,
                   icon: Icons.vaccines_rounded,
-                  onTap: () => _showVaccinatedFilter(context, notifier, state),
+                  onTap: () => _showVaccinatedFilter(context),
                 ),
                 const SizedBox(width: 8),
 
@@ -311,13 +333,13 @@ class _VaccinationHistoryListScreenState
                   data: (vaccines) {
                     if (vaccines.isEmpty) return const SizedBox.shrink();
 
-                    final selectedVaccine = state.vaccineId != null
+                    final selectedVaccine = _currentState.vaccineId != null
                         ? vaccines.firstWhere(
-                            (v) => v['id'] == state.vaccineId,
+                            (v) => v['id'] == _currentState.vaccineId,
                             orElse: () => {},
                           )
                         : null;
-                    final hasSelection = state.vaccineId != null;
+                    final hasSelection = _currentState.vaccineId != null;
                     final label = hasSelection &&
                             selectedVaccine != null &&
                             selectedVaccine.isNotEmpty
@@ -331,7 +353,7 @@ class _VaccinationHistoryListScreenState
                       iconOnRight: true,
                       trailingIcon: Icons.keyboard_arrow_down_rounded,
                       onTap: () => _showVaccineFilter(
-                          context, ref, vaccines, notifier, state),
+                          context, ref, vaccines),
                     );
                   },
                   loading: () => const SizedBox(
@@ -428,7 +450,6 @@ class _VaccinationHistoryListScreenState
 
   Widget _buildVaccinationCard(
     VaccinationHistoryModel item,
-    VaccinationHistoryListNotifier notifier,
   ) {
     final vaccineName =
         item.vaccine?['name'] as String? ?? 'Vaksin';
@@ -606,7 +627,7 @@ class _VaccinationHistoryListScreenState
                                 const SizedBox(height: 8),
                                 _MarkVaccinatedButton(
                                   item: item,
-                                  notifier: notifier,
+                                  notifier: _currentNotifier,
                                 ),
                               ],
                             ],
@@ -682,14 +703,12 @@ class _VaccinationHistoryListScreenState
 
   void _showDateRangeFilter(
     BuildContext context,
-    VaccinationHistoryListNotifier notifier,
-    VaccinationHistoryListState state,
   ) async {
     final now = DateTime.now();
-    final initialRange = state.startDate != null
+    final initialRange = _currentState.startDate != null
         ? DateTimeRange(
-            start: state.startDate!,
-            end: state.endDate ?? now,
+            start: _currentState.startDate!,
+            end: _currentState.endDate ?? now,
           )
         : null;
 
@@ -711,14 +730,12 @@ class _VaccinationHistoryListScreenState
     );
 
     if (picked != null) {
-      notifier.updateDateRange(picked.start, picked.end);
+      _currentNotifier.updateDateRange(picked.start, picked.end);
     }
   }
 
   void _showVaccinatedFilter(
     BuildContext context,
-    VaccinationHistoryListNotifier notifier,
-    VaccinationHistoryListState state,
   ) {
     showModalBottomSheet(
       context: context,
@@ -757,10 +774,10 @@ class _VaccinationHistoryListScreenState
                       color: AppTheme.textPrimary,
                     ),
                   ),
-                  if (state.isVaccinatedFilter != null)
+                  if (_currentState.isVaccinatedFilter != null)
                     TextButton(
                       onPressed: () {
-                        notifier.updateIsVaccinatedFilter(null);
+                        _currentNotifier.updateIsVaccinatedFilter(null);
                         Navigator.pop(context);
                       },
                       child: Text(
@@ -780,9 +797,9 @@ class _VaccinationHistoryListScreenState
                   label: 'Semua Status',
                   icon: Icons.all_inclusive_rounded,
                   color: Colors.grey,
-                  isSelected: state.isVaccinatedFilter == null,
+                  isSelected: _currentState.isVaccinatedFilter == null,
                   onTap: () {
-                    notifier.updateIsVaccinatedFilter(null);
+                    _currentNotifier.updateIsVaccinatedFilter(null);
                     Navigator.pop(context);
                   },
                 ),
@@ -791,9 +808,9 @@ class _VaccinationHistoryListScreenState
                   label: 'Sudah Divaksinasi',
                   icon: Icons.check_circle_rounded,
                   color: const Color(0xFF22C55E),
-                  isSelected: state.isVaccinatedFilter == true,
+                  isSelected: _currentState.isVaccinatedFilter == true,
                   onTap: () {
-                    notifier.updateIsVaccinatedFilter(true);
+                    _currentNotifier.updateIsVaccinatedFilter(true);
                     Navigator.pop(context);
                   },
                 ),
@@ -802,9 +819,9 @@ class _VaccinationHistoryListScreenState
                   label: 'Belum Divaksinasi',
                   icon: Icons.schedule_rounded,
                   color: const Color(0xFFEF4444),
-                  isSelected: state.isVaccinatedFilter == false,
+                  isSelected: _currentState.isVaccinatedFilter == false,
                   onTap: () {
-                    notifier.updateIsVaccinatedFilter(false);
+                    _currentNotifier.updateIsVaccinatedFilter(false);
                     Navigator.pop(context);
                   },
                 ),
@@ -854,8 +871,6 @@ class _VaccinationHistoryListScreenState
     BuildContext context,
     WidgetRef ref,
     List<Map<String, dynamic>> vaccines,
-    VaccinationHistoryListNotifier notifier,
-    VaccinationHistoryListState state,
   ) {
     String searchQuery = '';
     final textController = TextEditingController();
@@ -911,10 +926,10 @@ class _VaccinationHistoryListScreenState
                               color: AppTheme.textPrimary,
                             ),
                           ),
-                          if (state.vaccineId != null)
+                          if (_currentState.vaccineId != null)
                             TextButton(
                               onPressed: () {
-                                notifier.updateVaccineFilter(null);
+                                _currentNotifier.updateVaccineFilter(null);
                                 Navigator.pop(context);
                               },
                               child: Text(
@@ -974,7 +989,7 @@ class _VaccinationHistoryListScreenState
                               itemCount: filtered.length + 1,
                               itemBuilder: (context, idx) {
                                 if (idx == 0) {
-                                  final isAll = state.vaccineId == null;
+                                  final isAll = _currentState.vaccineId == null;
                                   return ListTile(
                                     contentPadding:
                                         const EdgeInsets.symmetric(
@@ -1015,14 +1030,14 @@ class _VaccinationHistoryListScreenState
                                           )
                                         : null,
                                     onTap: () {
-                                      notifier.updateVaccineFilter(null);
+                                      _currentNotifier.updateVaccineFilter(null);
                                       Navigator.pop(context);
                                     },
                                   );
                                 }
                                 final vaccine = filtered[idx - 1];
                                 final isSelected =
-                                    state.vaccineId == vaccine['id'];
+                                    _currentState.vaccineId == vaccine['id'];
                                 return ListTile(
                                   contentPadding:
                                       const EdgeInsets.symmetric(
@@ -1063,8 +1078,7 @@ class _VaccinationHistoryListScreenState
                                         )
                                       : null,
                                   onTap: () {
-                                    notifier
-                                        .updateVaccineFilter(vaccine['id']);
+                                    _currentNotifier.updateVaccineFilter(vaccine['id']);
                                     Navigator.pop(context);
                                   },
                                 );

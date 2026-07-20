@@ -17,9 +17,10 @@ import 'package:ternakku_app/features/livestock/domain/models/livestock_model.da
 // FORM SCREEN
 // =============================================================================
 class ConditionHistoryFormScreen extends ConsumerStatefulWidget {
-  final ConditionHistoryModel? history; // null = Tambah, ada = Edit
+  final ConditionHistoryModel? history;
+  final int? livestockId; // null = Tambah, ada = Edit
 
-  const ConditionHistoryFormScreen({super.key, this.history});
+  const ConditionHistoryFormScreen({super.key, this.history, this.livestockId});
 
   @override
   ConsumerState<ConditionHistoryFormScreen> createState() =>
@@ -44,6 +45,7 @@ class _ConditionHistoryFormScreenState
   Map<String, String> _serverErrors = {};
 
   bool get _isEdit => widget.history != null;
+  bool get _isFilteredMode => widget.livestockId != null;
 
   @override
   void initState() {
@@ -75,6 +77,8 @@ class _ConditionHistoryFormScreenState
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadReferenceLabels();
       });
+    } else if (_isFilteredMode) {
+      _loadLivestockLabel();
     }
   }
 
@@ -122,6 +126,33 @@ class _ConditionHistoryFormScreenState
         setState(
             () => _selectedConditionTypeLabel = 'ID: ${item.conditionTypeId}');
       }
+    }
+  }
+
+  // ==========================================
+  // FETCH LABELS UNTUK MODE FILTER
+  // ==========================================
+  Future<void> _loadLivestockLabel() async {
+    _selectedLivestockId = widget.livestockId!;
+
+    try {
+      final repo = ref.read(livestockRepositoryProvider);
+      final livestock = await repo.getLivestockDetail(widget.livestockId!);
+
+      if (!mounted) return;
+
+      setState(() {
+        final tag = livestock.tagId;
+        _selectedLivestockLabel = tag != null
+            ? '${livestock.name ?? 'Tanpa Nama'} ($tag)'
+            : livestock.name ?? 'Tanpa Nama';
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _selectedLivestockLabel = 'ID: ${widget.livestockId!}';
+      });
     }
   }
 

@@ -159,8 +159,11 @@ class VaccinationHistoryListNotifier
     fetchHistories(isRefresh: true);
   }
 
-  void clearFilters() {
-    state = VaccinationHistoryListState(query: state.query);
+  void clearFilters({bool isFilteredMode = false}) {
+    state = VaccinationHistoryListState(
+      query: state.query,
+      livestockId: isFilteredMode ? state.livestockId : null,
+    );
     fetchHistories(isRefresh: true);
   }
 }

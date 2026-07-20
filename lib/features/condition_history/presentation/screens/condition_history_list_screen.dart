@@ -9,7 +9,16 @@ import 'package:ternakku_app/features/farm/data/repositories/farm_repository.dar
 import '../providers/condition_history_list_provider.dart';
 
 class ConditionHistoryListScreen extends ConsumerStatefulWidget {
-  const ConditionHistoryListScreen({super.key});
+  /// Jika diisi, list akan otomatis ter-filter ke ternak ini
+  final int? livestockId;
+  /// Nama ternak untuk ditampilkan di AppBar saat mode filter ternak aktif
+  final String? livestockName;
+
+  const ConditionHistoryListScreen({
+    super.key,
+    this.livestockId,
+    this.livestockName,
+  });
 
   @override
   ConsumerState<ConditionHistoryListScreen> createState() =>
@@ -24,10 +33,18 @@ class _ConditionHistoryListScreenState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isFilteredMode) {
+        _currentNotifier.updateLivestockFilter(widget.livestockId!);
+      } else {
+        _currentNotifier.clearFilters();
+      }
+    });
+    
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        ref.read(conditionHistoryListProvider.notifier).fetchHistories();
+        _currentNotifier.fetchHistories();
       }
     });
   }
@@ -42,6 +59,22 @@ class _ConditionHistoryListScreenState
   // ==========================================
   // HELPER METHODS
   // ==========================================
+
+  /// Apakah halaman ini dibuka dalam mode filter ternak tertentu
+  bool get _isFilteredMode => widget.livestockId != null;
+
+  /// Provider yang aktif berdasarkan mode
+  ConditionHistoryListNotifier get _currentNotifier => ref.read(conditionHistoryListProvider.notifier);
+  ConditionHistoryListState get _currentState => ref.watch(conditionHistoryListProvider);
+
+  bool get _hasActiveFilters {
+    final state = _currentState;
+    return state.conditionTypeId != null ||
+        state.livestockId != null ||
+        state.startDate != null ||
+        state.endDate != null;
+  }
+
 
   Color _getConditionColor(String? conditionCode) {
     if (conditionCode == null) return AppTheme.primaryColor;
@@ -88,13 +121,6 @@ class _ConditionHistoryListScreenState
     return DateFormat('dd MMMM yyyy', 'id_ID').format(date);
   }
 
-  bool get _hasActiveFilters {
-    final state = ref.read(conditionHistoryListProvider);
-    return state.conditionTypeId != null ||
-        state.livestockId != null ||
-        state.startDate != null ||
-        state.endDate != null;
-  }
 
   // ==========================================
   // BUILD
@@ -102,27 +128,32 @@ class _ConditionHistoryListScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(conditionHistoryListProvider);
-    final notifier = ref.read(conditionHistoryListProvider.notifier);
+    final state = _currentState;
+    final notifier = _currentNotifier;
     final conditionTypesAsync = ref.watch(_conditionTypesProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: Text(
-          'Catatan Harian',
+          _isFilteredMode
+              ? 'Riwayat: ${widget.livestockName ?? 'Ternak'}'
+              : 'Catatan Harian',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: _isFilteredMode ? 17 : 20,
             color: AppTheme.textPrimary,
           ),
         ),
         elevation: 0,
         backgroundColor: AppTheme.scaffoldBackground,
         actions: [
-          if (_hasActiveFilters)
+          // Tombol reset hanya tampil jika ada filter selain livestockId (filter bawaan di mode ternak)
+          if (_isFilteredMode
+              ? (state.conditionTypeId != null || state.startDate != null || state.endDate != null)
+              : _hasActiveFilters)
             TextButton.icon(
-              onPressed: () => notifier.clearFilters(),
+              onPressed: () => notifier.clearFilters(isFilteredMode: _isFilteredMode),
               icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
               label: Text(
                 'Reset',
@@ -133,7 +164,7 @@ class _ConditionHistoryListScreenState
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/condition-history/form'),
+        onPressed: () => context.push('/condition-history/form${_isFilteredMode ? '?livestockId=${widget.livestockId}' : ''}'),
         backgroundColor: const Color(0xFFF59E0B),
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add_rounded),
@@ -162,6 +193,7 @@ class _ConditionHistoryListScreenState
                       ? _buildEmptyState()
                       : ListView.separated(
                           controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 8, bottom: 100),
                           itemCount: state.histories.length +
@@ -583,8 +615,7 @@ class _ConditionHistoryListScreenState
   }
 
   Widget _buildEmptyState() {
-    final hasFilters = ref.read(conditionHistoryListProvider).query.isNotEmpty ||
-        _hasActiveFilters;
+    final hasFilters = _currentState.query.isNotEmpty || _hasActiveFilters;
     return Center(
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

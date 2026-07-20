@@ -21,6 +21,9 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _currentNotifier.clearFilters();
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
         ref.read(livestockListProvider.notifier).fetchLivestocks();
@@ -91,18 +94,18 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
     }
     return Icons.pets_rounded;
   }
+
+  LivestockListNotifier get _currentNotifier => ref.read(livestockListProvider.notifier);
+  LivestockListState get _currentState => ref.watch(livestockListProvider);
   
   bool get _hasActiveFilters {
-    final state = ref.read(livestockListProvider);
-    return state.status != null ||
-        state.gender != null ||
-        state.animalTypeId != null;
+    return _currentState.status != null ||
+        _currentState.gender != null ||
+        _currentState.animalTypeId != null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(livestockListProvider);
-    final notifier = ref.read(livestockListProvider.notifier);
     final animalTypesAsync = ref.watch(farmAnimalTypesProvider);
 
     return Scaffold(
@@ -121,7 +124,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
         actions: [
           if (_hasActiveFilters)
             TextButton.icon(
-              onPressed: () => notifier.clearFilters(),
+              onPressed: () => _currentNotifier.clearFilters(),
               icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
               label: Text(
                 'Reset',
@@ -182,7 +185,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                               icon: const Icon(Icons.clear, color: Colors.grey),
                               onPressed: () {
                                 _searchController.clear();
-                                notifier.updateQuery('');
+                                _currentNotifier.updateQuery('');
                                 FocusScope.of(context).unfocus();
                               },
                             )
@@ -203,7 +206,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                         borderSide: const BorderSide(color: AppTheme.primaryColor, width: 1.5),
                       ),
                     ),
-                    onSubmitted: (value) => notifier.updateQuery(value),
+                    onSubmitted: (value) => _currentNotifier.updateQuery(value),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -219,13 +222,13 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                         data: (types) {
                           if (types.isEmpty) return const SizedBox.shrink();
 
-                          final selectedType = state.animalTypeId != null
+                          final selectedType = _currentState.animalTypeId != null
                             ? types.firstWhere(
-                                (t) => t['id'] == state.animalTypeId,
+                                (t) => t['id'] == _currentState.animalTypeId,
                                 orElse: () => {},
                               )
                             : null;
-                          final hasSelection = state.animalTypeId != null;
+                          final hasSelection = _currentState.animalTypeId != null;
                           final label = hasSelection && selectedType != null && selectedType.isNotEmpty
                             ? 'Jenis: ${selectedType['label']}'
                             : 'Semua Jenis';
@@ -255,20 +258,20 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
 
                       _buildFilterChip(
                         _getStatusLabel('active'), 
-                        state.status == 'active', 
-                        () => notifier.updateStatus(state.status == 'active' ? null : 'active')
+                        _currentState.status == 'active', 
+                        () => _currentNotifier.updateStatus(_currentState.status == 'active' ? null : 'active')
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         _getStatusLabel('sold'),
-                        state.status == 'sold', 
-                        () => notifier.updateStatus(state.status == 'sold' ? null : 'sold')
+                        _currentState.status == 'sold', 
+                        () => _currentNotifier.updateStatus(_currentState.status == 'sold' ? null : 'sold')
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         _getStatusLabel('dead'),
-                        state.status == 'dead', 
-                        () => notifier.updateStatus(state.status == 'dead' ? null : 'dead')
+                        _currentState.status == 'dead', 
+                        () => _currentNotifier.updateStatus(_currentState.status == 'dead' ? null : 'dead')
                       ),
 
                       Container(
@@ -281,16 +284,16 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                       // Filter Gender
                       _buildFilterChip(
                         'Jantan',
-                        state.gender == 'male',
-                        () => notifier.updateGender(state.gender == 'male' ? null : 'male'),
+                        _currentState.gender == 'male',
+                        () => _currentNotifier.updateGender(_currentState.gender == 'male' ? null : 'male'),
                         icon: Icons.male,
                         iconColor: Colors.blue,
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         'Betina',
-                        state.gender == 'female',
-                        () => notifier.updateGender(state.gender == 'female' ? null : 'female'),
+                        _currentState.gender == 'female',
+                        () => _currentNotifier.updateGender(_currentState.gender == 'female' ? null : 'female'),
                         icon: Icons.female,
                         iconColor: Colors.pink,
                       ),
@@ -305,25 +308,26 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
           Expanded(
             child: RefreshIndicator(
               color: AppTheme.primaryColor,
-              onRefresh: () => notifier.fetchLivestocks(isRefresh: true),
-              child: state.isLoading
+              onRefresh: () => _currentNotifier.fetchLivestocks(isRefresh: true),
+              child: _currentState.isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : state.livestocks.isEmpty
+                  : _currentState.livestocks.isEmpty
                       ? _buildEmptyState()
                       : ListView.separated(
                           controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.only(
                             left: 20, right: 20, top: 8, bottom: 100),
-                          itemCount: state.livestocks.length + (state.isLoadMore ? 1 : 0),
+                          itemCount: _currentState.livestocks.length + (_currentState.isLoadMore ? 1 : 0),
                           separatorBuilder: (_, _) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
-                            if (index == state.livestocks.length) {
+                            if (index == _currentState.livestocks.length) {
                               return const Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Center(child: CircularProgressIndicator()),
                               );
                             }
-                            final item = state.livestocks[index];
+                            final item = _currentState.livestocks[index];
                             return _buildLivestockCard(item);
                           },
                         ),
@@ -341,8 +345,6 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
     WidgetRef ref,
     List<dynamic> types,
   ) {
-    final notifier = ref.read(livestockListProvider.notifier);
-    final state = ref.read(livestockListProvider);
     String searchQuery = '';
     final textController = TextEditingController();
 
@@ -399,10 +401,10 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                               color: AppTheme.textPrimary,
                             ),
                           ),
-                          if (state.animalTypeId != null)
+                          if (_currentState.animalTypeId != null)
                             TextButton(
                               onPressed: () {
-                                notifier.updateAnimalType(-1);
+                                _currentNotifier.updateAnimalType(-1);
                                 Navigator.pop(context);
                               },
                               child: Text(
@@ -474,7 +476,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                               itemCount: filteredTypes.length + 1,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
-                                  final isAllSelected = state.animalTypeId == null;
+                                  final isAllSelected = _currentState.animalTypeId == null;
                                   return ListTile(
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                                     leading: Container(
@@ -503,14 +505,14 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                                         ? const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor)
                                         : null,
                                     onTap: () {
-                                      notifier.updateAnimalType(-1);
+                                      _currentNotifier.updateAnimalType(-1);
                                       Navigator.pop(context);
                                     },
                                   );
                                 }
 
                                 final type = filteredTypes[index - 1];
-                                final isSelected = state.animalTypeId == type['id'];
+                                final isSelected = _currentState.animalTypeId == type['id'];
 
                                 return ListTile(
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
@@ -540,7 +542,7 @@ class _LivestockListScreenState extends ConsumerState<LivestockListScreen> {
                                       ? const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor)
                                       : null,
                                   onTap: () {
-                                    notifier.updateAnimalType(type['id']);
+                                    _currentNotifier.updateAnimalType(type['id']);
                                     Navigator.pop(context);
                                   },
                                 );

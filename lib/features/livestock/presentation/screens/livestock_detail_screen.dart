@@ -4,7 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:ternakku_app/core/theme/app_theme.dart';
+import 'package:ternakku_app/features/condition_history/data/repositories/condition_history_repository.dart';
+import 'package:ternakku_app/features/condition_history/domain/models/condition_history_model.dart';
 import 'package:ternakku_app/features/farm/data/repositories/farm_repository.dart';
+import 'package:ternakku_app/features/vaccination_history/data/repositories/vaccination_history_repository.dart';
+import 'package:ternakku_app/features/vaccination_history/domain/models/vaccination_history_model.dart';
 import '../../domain/models/livestock_model.dart';
 import '../../data/repositories/livestock_repository.dart';
 import '../providers/livestock_list_provider.dart';
@@ -27,6 +31,16 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
   String _fatherLabel = '-';
   String _motherLabel = '-';
 
+  // --- State kondisi terkini ---
+  ConditionHistoryModel? _latestCondition;
+  bool _isLoadingCondition = true;
+  String _conditionTypeLabel = '-';
+
+  // --- State riwayat vaksinasi ---
+  VaccinationHistoryModel? _latestVaccination;
+  bool _isLoadingVaccination = true;
+  String _vaccineLabel = '-';
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +48,8 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
     _currentLivestock = widget.livestock;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadReferenceLabels();
+      _loadLatestCondition();
+      _loadLatestVaccination();
     });
   }
 
@@ -153,6 +169,100 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
     } else {
       if (mounted) setState(() => _motherLabel = '-');
     }
+  }
+
+  // ==========================================
+  // FETCH KONDISI TERKINI
+  // ==========================================
+  Future<void> _loadLatestCondition() async {
+    if (!mounted) return;
+    setState(() => _isLoadingCondition = true);
+
+    try {
+      final repo = ref.read(conditionHistoryRepositoryProvider);
+      final results = await repo.getConditionHistories(
+        limit: 1,
+        offset: 0,
+        livestockId: _currentLivestock.id,
+      );
+
+      if (!mounted) return;
+
+      if (results.isNotEmpty) {
+        final latest = results.first;
+        // Ambil label tipe kondisi
+        String condLabel = '-';
+        if (latest.conditionType != null && latest.conditionType!.isNotEmpty) {
+          condLabel = latest.conditionType!['label'] as String? ?? '-';
+        } else {
+          try {
+            final farmRepo = ref.read(farmRepositoryProvider);
+            final ct = await farmRepo.getConditionTypeDetail(latest.conditionTypeId);
+            condLabel = ct['label'] as String? ?? '-';
+          } catch (_) {
+            condLabel = 'ID: ${latest.conditionTypeId}';
+          }
+        }
+
+        if (mounted) {
+          setState(() {
+            _latestCondition = latest;
+            _conditionTypeLabel = condLabel;
+            _isLoadingCondition = false;
+          });
+        }
+      } else {
+        if (mounted) setState(() => _isLoadingCondition = false);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoadingCondition = false);
+    }
+  }
+
+  // ==========================================
+  // HELPERS KONDISI
+  // ==========================================
+  Color _getConditionColor(String conditionLabel) {
+    final lower = conditionLabel.toLowerCase();
+    if (lower.contains('sehat') || lower.contains('baik') || lower.contains('normal')) {
+      return const Color(0xFF22C55E);
+    } else if (lower.contains('sakit') || lower.contains('ill') || lower.contains('sick')) {
+      return const Color(0xFFEF4444);
+    } else if (lower.contains('lahir') || lower.contains('birth')) {
+      return const Color(0xFF3B82F6);
+    } else if (lower.contains('mati') || lower.contains('dead')) {
+      return const Color(0xFF6B7280);
+    } else if (lower.contains('bunting') || lower.contains('hamil') || lower.contains('pregnant')) {
+      return const Color(0xFFF59E0B);
+    }
+    return AppTheme.primaryColor;
+  }
+
+  IconData _getConditionIcon(String conditionLabel) {
+    final lower = conditionLabel.toLowerCase();
+    if (lower.contains('sehat') || lower.contains('baik') || lower.contains('normal')) {
+      return Icons.favorite_rounded;
+    } else if (lower.contains('sakit') || lower.contains('ill') || lower.contains('sick')) {
+      return Icons.sick_rounded;
+    } else if (lower.contains('lahir') || lower.contains('birth')) {
+      return Icons.child_care_rounded;
+    } else if (lower.contains('mati') || lower.contains('dead')) {
+      return Icons.heart_broken_rounded;
+    } else if (lower.contains('bunting') || lower.contains('hamil') || lower.contains('pregnant')) {
+      return Icons.pregnant_woman_rounded;
+    }
+    return Icons.note_alt_outlined;
+  }
+
+  String _formatDateRelative(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final recordDay = DateTime(date.year, date.month, date.day);
+
+    if (recordDay == today) return 'Hari ini';
+    if (recordDay == yesterday) return 'Kemarin';
+    return DateFormat('dd MMMM yyyy', 'id_ID').format(date);
   }
 
   void _showDeleteDialog() {
@@ -456,9 +566,715 @@ class _LivestockDetailScreenState extends ConsumerState<LivestockDetailScreen> {
                       ),
                     ),
                   ],
+
+                  // --- KARTU KONDISI TERKINI ---
+                  const SizedBox(height: 16),
+                  _buildLatestConditionCard(color),
+
+                  // --- KARTU VAKSINASI TERAKHIR ---
+                  const SizedBox(height: 16),
+                  _buildLatestVaccinationCard(color),
+
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
+    );
+  }
+
+  // ==========================================
+  // KARTU KONDISI TERKINI
+  // ==========================================
+  Widget _buildLatestConditionCard(Color livestockColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.monitor_heart_rounded,
+                  color: livestockColor,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Kondisi',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                const Spacer(),
+                // Tombol "Lihat Riwayat Lengkap"
+                GestureDetector(
+                  onTap: () async {
+                    await context.push(
+                      '/condition-history',
+                      extra: {
+                        'livestockId': _currentLivestock.id,
+                        'livestockName': _currentLivestock.name ?? 'Ternak',
+                      },
+                    );
+
+                    _loadLatestCondition();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: livestockColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Lihat Semua',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: livestockColor,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 10,
+                          color: livestockColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(height: 24),
+          ),
+
+          // Konten kondisi
+          if (_isLoadingCondition)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: livestockColor,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Memuat kondisi...',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (_latestCondition == null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.assignment_outlined,
+                      size: 24,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Belum Ada Catatan',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Tap "Lihat Semua" untuk mulai mencatat kondisi ternak ini.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            _buildConditionContent(_latestCondition!, livestockColor),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConditionContent(ConditionHistoryModel condition, Color livestockColor) {
+    final condColor = _getConditionColor(_conditionTypeLabel);
+    final condIcon = _getConditionIcon(_conditionTypeLabel);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Baris utama: ikon + label kondisi + tanggal
+          Row(
+            children: [
+              // Ikon kondisi
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: condColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  condIcon,
+                  color: condColor,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Badge kondisi
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: condColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        _conditionTypeLabel,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: condColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    // Tanggal
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 11,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDateRelative(condition.recordDate),
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Tap untuk detail
+              IconButton(
+                onPressed: () async {
+                  await context.push('/condition-history/detail', extra: condition);
+                  _loadLatestCondition();
+                },
+                icon: Icon(
+                  Icons.open_in_new_rounded,
+                  size: 18,
+                  color: Colors.grey.shade400,
+                ),
+                tooltip: 'Lihat Detail',
+              ),
+            ],
+          ),
+
+          // Catatan tambahan (jika ada)
+          if (condition.notes != null && condition.notes!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: condColor.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: condColor.withValues(alpha: 0.15)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.notes_rounded,
+                    size: 14,
+                    color: condColor.withValues(alpha: 0.7),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      condition.notes!,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                        height: 1.5,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // FETCH VAKSINASI TERKINI
+  // ==========================================
+  Future<void> _loadLatestVaccination() async {
+    if (!mounted) return;
+    setState(() => _isLoadingVaccination = true);
+
+    try {
+      final repo = ref.read(vaccinationHistoryRepositoryProvider);
+      final results = await repo.getVaccinationHistories(
+        limit: 1,
+        offset: 0,
+        livestockId: _currentLivestock.id,
+      );
+
+      if (!mounted) return;
+
+      if (results.isNotEmpty) {
+        final latest = results.first;
+        String vacLabel = '-';
+        if (latest.vaccine != null && latest.vaccine!.isNotEmpty) {
+          vacLabel = latest.vaccine!['name'] as String? ?? '-';
+        } else {
+          try {
+            final farmRepo = ref.read(farmRepositoryProvider);
+            final v = await farmRepo.getVaccineDetail(latest.vaccineId);
+            vacLabel = v['name'] as String? ?? '-';
+          } catch (_) {
+            vacLabel = 'ID: ${latest.vaccineId}';
+          }
+        }
+
+        if (mounted) {
+          setState(() {
+            _latestVaccination = latest;
+            _vaccineLabel = vacLabel;
+            _isLoadingVaccination = false;
+          });
+        }
+      } else {
+        if (mounted) setState(() => _isLoadingVaccination = false);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoadingVaccination = false);
+    }
+  }
+
+  // ==========================================
+  // HELPERS VAKSINASI
+  // ==========================================
+  bool _isOverdue(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return false;
+    return item.vaccinationDate.isBefore(DateTime.now());
+  }
+
+  bool _isUpcoming(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return false;
+    final diff = item.vaccinationDate.difference(DateTime.now()).inDays;
+    return diff >= 0 && diff <= 7;
+  }
+
+  Color _getVaccinationColor(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return const Color(0xFF22C55E);
+    if (_isOverdue(item)) return const Color(0xFFEF4444);
+    if (_isUpcoming(item)) return const Color(0xFFF59E0B);
+    return const Color(0xFF3B82F6);
+  }
+
+  IconData _getVaccinationIcon(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return Icons.check_circle_rounded;
+    if (_isOverdue(item)) return Icons.warning_amber_rounded;
+    if (_isUpcoming(item)) return Icons.notification_important_rounded;
+    return Icons.schedule_rounded;
+  }
+
+  String _getVaccinationStatusLabel(VaccinationHistoryModel item) {
+    if (item.isVaccinated) return 'Selesai';
+    if (_isOverdue(item)) return 'Terlambat';
+    if (_isUpcoming(item)) return 'Segera';
+    return 'Terjadwal';
+  }
+
+  Widget _buildLatestVaccinationCard(Color livestockColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.vaccines_rounded,
+                  color: livestockColor,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Vaksinasi',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                const Spacer(),
+                // Tombol "Lihat Semua"
+                GestureDetector(
+                  onTap: () async {
+                    await context.push(
+                      '/vaccination-history',
+                      extra: {
+                        'livestockId': _currentLivestock.id,
+                        'livestockName': _currentLivestock.name ?? 'Ternak',
+                      },
+                    );
+
+                    _loadLatestVaccination();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: livestockColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Lihat Semua',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: livestockColor,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 10,
+                          color: livestockColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(height: 24),
+          ),
+
+          // Konten vaksinasi
+          if (_isLoadingVaccination)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: livestockColor,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Memuat riwayat vaksinasi...',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (_latestVaccination == null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.assignment_outlined,
+                      size: 24,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Belum Ada Catatan',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Tap "Lihat Semua" untuk mulai mencatat riwayat vaksinasi.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            _buildVaccinationContent(_latestVaccination!, livestockColor),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVaccinationContent(VaccinationHistoryModel vaccination, Color livestockColor) {
+    final vacColor = _getVaccinationColor(vaccination);
+    final vacIcon = _getVaccinationIcon(vaccination);
+    final statusLabel = _getVaccinationStatusLabel(vaccination);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Baris utama: ikon + label vaksin + tanggal
+          Row(
+            children: [
+              // Ikon status vaksin
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: vacColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  vacIcon,
+                  color: vacColor,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Nama Vaksin
+                    Text(
+                      _vaccineLabel,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    // Badge status vaksinasi
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: vacColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            statusLabel,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: vacColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 11,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDateRelative(vaccination.vaccinationDate),
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Tap untuk detail
+              IconButton(
+                onPressed: () async {
+                  await context.push('/vaccination-history/detail', extra: vaccination);
+                  _loadLatestVaccination();
+                },
+                icon: Icon(
+                  Icons.open_in_new_rounded,
+                  size: 18,
+                  color: Colors.grey.shade400,
+                ),
+                tooltip: 'Lihat Detail',
+              ),
+            ],
+          ),
+
+          // Catatan tambahan / Batch number (jika ada)
+          if ((vaccination.batchNumber != null && vaccination.batchNumber!.isNotEmpty) ||
+              (vaccination.notes != null && vaccination.notes!.isNotEmpty)) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: vacColor.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: vacColor.withValues(alpha: 0.15)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (vaccination.batchNumber != null && vaccination.batchNumber!.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.qr_code_rounded,
+                          size: 12,
+                          color: vacColor.withValues(alpha: 0.7),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Batch: ${vaccination.batchNumber}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (vaccination.notes != null && vaccination.notes!.isNotEmpty)
+                      const SizedBox(height: 6),
+                  ],
+                  if (vaccination.notes != null && vaccination.notes!.isNotEmpty)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.notes_rounded,
+                          size: 12,
+                          color: vacColor.withValues(alpha: 0.7),
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            vaccination.notes!,
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                              height: 1.4,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
