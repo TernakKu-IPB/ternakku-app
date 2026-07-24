@@ -1,4 +1,4 @@
-package com.example.ternakku_app
+package id.cibest.ternakku
 
 import io.flutter.embedding.android.FlutterActivity
 

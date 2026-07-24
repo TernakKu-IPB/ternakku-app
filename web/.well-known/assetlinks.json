@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "id.cibest.ternakku",
+      "sha256_cert_fingerprints": [
+        "8E:C6:D6:8A:3E:62:65:1E:0C:EB:55:54:E5:D6:B4:62:6E:B5:25:77:52:CE:79:61:DD:20:7F:C6:DD:FF:C4:71"
+      ]
+    }
+  }
+]

@@ -10,10 +10,13 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeDateFormatting('id_ID', null);
+  await dotenv.load(fileName: '.env');
 
   runApp(
     const ProviderScope(
@@ -49,16 +52,28 @@ class _TernakKuAppState extends ConsumerState<TernakKuApp> {
   }
 
   void _processUri(Uri uri) {
-    // Gunakan ref.read untuk push path dari URI ke goRouter
-    // Contoh: ternakku://reset-password?token=abc
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = ref.read(goRouter);
-      // uri.scheme => ternakku
-      // uri.host   => reset-password
-      // uri.path   => ""
-      // uri.query  => token=...
-      final fullPath = '/${uri.host}?${uri.query}';
-      router.go(fullPath);
+      if (uri.scheme == 'ternakku') {
+        // Gunakan ref.read untuk push path dari URI ke goRouter
+        // Contoh: ternakku://reset-password?token=abc
+        // uri.scheme => ternakku
+        // uri.host   => reset-password
+        // uri.path   => ""
+        // uri.query  => token=...
+        router.go('/${uri.host}?${uri.query}');
+        return;
+      }
+      
+      if (uri.scheme == 'https') {
+        if (uri.path == '/auth/forgot-password') {
+          final token = uri.queryParameters['token'];
+
+          router.go(
+            '/reset-password?token=$token',
+          );
+        }
+      }
     });
   }
 
