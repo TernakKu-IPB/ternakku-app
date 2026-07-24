@@ -38,6 +38,7 @@ class _VaccinationHistoryListScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_isFilteredMode) {
         _currentNotifier.updateLivestockFilter(widget.livestockId!);
+        _currentNotifier.clearFilters(isFilteredMode: true);
       } else {
         _currentNotifier.clearFilters();
       }
