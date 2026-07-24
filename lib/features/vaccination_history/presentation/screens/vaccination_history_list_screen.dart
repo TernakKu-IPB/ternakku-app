@@ -149,7 +149,7 @@ class _VaccinationHistoryListScreenState
         title: Text(
           _isFilteredMode
               ? 'Vaksinasi: ${widget.livestockName ?? 'Ternak'}'
-              : 'Rekam Medis',
+              : 'Riwayat Vaksinasi',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: _isFilteredMode ? 17 : 20,
@@ -655,7 +655,7 @@ class _VaccinationHistoryListScreenState
             ),
             const SizedBox(height: 20),
             Text(
-              _hasActiveFilters ? 'Tidak Ada Hasil' : 'Belum Ada Rekam Medis',
+              _hasActiveFilters ? 'Tidak Ada Hasil' : 'Belum Ada Riwayat Vaksinasi',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

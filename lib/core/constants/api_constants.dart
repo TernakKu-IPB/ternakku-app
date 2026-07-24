@@ -40,6 +40,6 @@ class ApiConstants {
   // Condition History (Catatan Harian)
   static const String conditionHistory = '/condition-histories';
 
-  // Vaccination History (Rekam Medis)
+  // Vaccination History (Riwayat Vaksinasi)
   static const String vaccinationHistory = '/vaccination-histories';
 }

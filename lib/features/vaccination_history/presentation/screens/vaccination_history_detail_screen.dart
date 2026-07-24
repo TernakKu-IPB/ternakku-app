@@ -252,11 +252,11 @@ class _VaccinationHistoryDetailScreenState
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
-          'Hapus Rekam Medis?',
+          'Hapus Riwayat Vaksinasi?',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
         content: Text(
-          'Apakah Anda yakin ingin menghapus rekam medis ini? Tindakan ini tidak dapat dibatalkan.',
+          'Apakah Anda yakin ingin menghapus riwayat vaksinasi ini? Tindakan ini tidak dapat dibatalkan.',
           style: GoogleFonts.poppins(color: Colors.grey.shade600),
         ),
         actions: [
@@ -303,7 +303,7 @@ class _VaccinationHistoryDetailScreenState
             .fetchHistories(isRefresh: true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Rekam medis berhasil dihapus'),
+            content: Text('Riwayat vaksinasi berhasil dihapus'),
             backgroundColor: Color(0xFFEF4444),
           ),
         );
@@ -313,7 +313,7 @@ class _VaccinationHistoryDetailScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Gagal menghapus rekam medis'),
+            content: Text('Gagal menghapus riwayat vaksinasi'),
             backgroundColor: Colors.red,
           ),
         );
@@ -336,7 +336,7 @@ class _VaccinationHistoryDetailScreenState
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: Text(
-          'Detail Rekam Medis',
+          'Detail Vaksinasi',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppTheme.scaffoldBackground,
@@ -374,7 +374,7 @@ class _VaccinationHistoryDetailScreenState
                       color: Color(0xFFEF4444)),
                   const SizedBox(height: 16),
                   Text(
-                    'Menghapus rekam medis...',
+                    'Menghapus riwayat vaksinasi...',
                     style:
                         GoogleFonts.poppins(color: Colors.grey.shade600),
                   ),
@@ -531,7 +531,7 @@ class _VaccinationHistoryDetailScreenState
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Informasi Rekam Medis',
+                              'Informasi Vaksinasi',
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

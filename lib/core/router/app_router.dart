@@ -137,7 +137,7 @@ final goRouter = Provider<GoRouter>((ref) {
         },
       ),
 
-      // ---- Rekam Medis (Vaccination History) ----
+      // ---- Riwayat Vaksinasi (Vaccination History) ----
       GoRoute(
         path: '/vaccination-history',
         builder: (context, state) {

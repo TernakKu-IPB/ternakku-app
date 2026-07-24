@@ -341,8 +341,8 @@ class _VaccinationHistoryFormScreenState
         SnackBar(
           content: Text(
             _isEdit
-                ? 'Rekam medis berhasil diperbarui'
-                : 'Jadwal vaksinasi berhasil ditambahkan',
+                ? 'Riwayat Vaksinasi berhasil diperbarui'
+                : 'Riwayat vaksinasi berhasil ditambahkan',
           ),
           backgroundColor: const Color(0xFFEF4444),
         ),
@@ -369,7 +369,7 @@ class _VaccinationHistoryFormScreenState
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: Text(
-          _isEdit ? 'Edit Rekam Medis' : 'Jadwalkan Vaksinasi',
+          _isEdit ? 'Edit Vaksinasi' : 'Tambah Vaksinasi',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppTheme.scaffoldBackground,
@@ -629,8 +629,8 @@ class _VaccinationHistoryFormScreenState
                         )
                       : Text(
                           _isEdit
-                              ? 'Perbarui Rekam Medis'
-                              : 'Simpan Jadwal Vaksinasi',
+                              ? 'Perbarui Riwayat Vaksinasi'
+                              : 'Simpan Riwayat Vaksinasi',
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

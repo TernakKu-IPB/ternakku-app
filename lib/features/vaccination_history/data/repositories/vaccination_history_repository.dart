@@ -15,7 +15,7 @@ class VaccinationHistoryRepository extends BaseRepository {
 
   VaccinationHistoryRepository(this._dio);
 
-  // 1. Ambil daftar rekam medis (dengan Search & Filter & Pagination)
+  // 1. Ambil daftar riwayat vaksinasi (dengan Search & Filter & Pagination)
   //    GET /vaccination-histories → ada relasi livestock & vaccine
   Future<List<VaccinationHistoryModel>> getVaccinationHistories({
     int limit = 10,
@@ -53,7 +53,7 @@ class VaccinationHistoryRepository extends BaseRepository {
     });
   }
 
-  // 2. Ambil detail satu rekam medis
+  // 2. Ambil detail satu riwayat vaksinasi
   Future<VaccinationHistoryModel> getVaccinationHistoryDetail(int id) async {
     return request(() async {
       final response =
@@ -62,7 +62,7 @@ class VaccinationHistoryRepository extends BaseRepository {
     });
   }
 
-  // 3. Tambah rekam medis baru
+  // 3. Tambah riwayat vaksinasi baru
   Future<VaccinationHistoryModel> createVaccinationHistory(
       Map<String, dynamic> data) async {
     return request(() async {
@@ -74,7 +74,7 @@ class VaccinationHistoryRepository extends BaseRepository {
     });
   }
 
-  // 4. Update rekam medis
+  // 4. Update riwayat vaksinasi
   Future<VaccinationHistoryModel> updateVaccinationHistory(
       int id, Map<String, dynamic> data) async {
     return request(() async {
@@ -86,7 +86,7 @@ class VaccinationHistoryRepository extends BaseRepository {
     });
   }
 
-  // 5. Hapus rekam medis
+  // 5. Hapus riwayat vaksinasi
   Future<int> deleteVaccinationHistory(int id) async {
     return request(() async {
       final response =
