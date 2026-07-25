@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/validators/app_validators.dart';
+import 'package:ternakku_app/core/validators/password_rules.dart';
 import '../providers/auth_controller.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
@@ -96,6 +97,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Kata sandi baru',
+                    hintText: 'Minimal 8 karakter',
                     errorMaxLines: 2,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
@@ -105,14 +107,23 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   ),
                   onChanged: (_) {
                     if (_serverErrors.containsKey('newPassword')) {
-                      setState(() => _serverErrors.remove('newPassword'));
-                      _formKey.currentState!.validate();
+                      _serverErrors.remove('newPassword');
                     }
+                    setState(() {});
                   },
                   validator: (value) {
                     if (_serverErrors.containsKey('newPassword')) return _serverErrors['newPassword'];
                     return AppValidators.password(value);
                   },
+                ),
+                const SizedBox(height: 8),
+                Column(
+                  children: passwordRules.map((rule) {
+                    return _buildPasswordRequirement(
+                      rule.check(_passwordController.text),
+                      rule.description,
+                    );
+                  }).toList(),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -140,6 +151,34 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordRequirement(
+    bool fulfilled,
+    String text,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Icon(
+            fulfilled ? Icons.check_circle : Icons.cancel,
+            size: 18,
+            color: fulfilled ? Colors.green : Colors.grey,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 13,
+                color: fulfilled ? Colors.green : Colors.grey.shade700,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
