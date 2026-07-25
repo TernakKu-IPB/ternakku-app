@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ternakku_app/core/network/api_exception.dart';
 
 abstract class BaseRepository {
@@ -11,6 +12,7 @@ abstract class BaseRepository {
   }
 
   ApiException parseDioError(DioException e) {
+    debugPrint(e.toString());
     if (e.response == null || e.response?.data == null) {
       return const ApiException(
         message: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',

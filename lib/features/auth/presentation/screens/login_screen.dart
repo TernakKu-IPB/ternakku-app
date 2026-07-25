@@ -69,7 +69,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
 
         if (e is ApiException) {
-          debugPrint('Error terduga 2: ${e.fieldErrors.toString()}');
           // Jika backend mengirimkan error spesifik per field
           if (e.fieldErrors != null && e.fieldErrors!.isNotEmpty) {
             setState(() {
