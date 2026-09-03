@@ -35,127 +35,28 @@ TernakKu dikembangkan untuk membantu peternak dalam:
 - Menyediakan arsitektur data kustom yang fleksibel (peternak dapat membuat kategori pencatatan sendiri).
 - Meningkatkan efisiensi pengelolaan usaha peternakan secara keseluruhan.
 
-## 📌 Use Case
+## 📱 Tampilan Aplikasi
 
-```mermaid
-flowchart LR
-    Peternak((Peternak))
-    Admin((Admin))
-    
-    subgraph Aplikasi TernakKu
-        direction TB
-        UC1([Registrasi Akun])
-        UC2([Login])
-        UC3([Kelola Profil Pengguna])
-        UC4([Kelola Profil Peternakan])
-        UC5([Kelola Data & Silsilah Ternak])
-        UC6([Kelola Riwayat Kondisi & Vaksinasi])
-        UC7([Kelola Master Data Parameter])
-    end
-    
-    %% Relasi Peternak
-    Peternak --- UC1
-    Peternak --- UC2
-    Peternak --- UC3
-    Peternak --- UC4
-    Peternak --- UC5
-    Peternak --- UC6
-    Peternak --- UC7
-    
-    %% Relasi Admin
-    Admin --- UC2
-    Admin --- UC3
-    Admin --- UC7
-    
-    %% Relasi Include (Harus Login terlebih dahulu)
-    UC3 -.->|<< include >>| UC2
-    UC4 -.->|<< include >>| UC2
-    UC5 -.->|<< include >>| UC2
-    UC6 -.->|<< include >>| UC2
-    UC7 -.->|<< include >>| UC2
-```
+### 1. 🏠 Halaman Home
 
-1. **UC1: Registrasi Akun**: Peternak mendaftarkan diri jika belum memiliki akun.
+Halaman Home merupakan halaman utama aplikasi yang memberikan ringkasan informasi peternakan dan akses cepat menuju fitur-fitur utama TernakKu.
 
-2. **UC2: Login**: Akses masuk ke dalam sistem menggunakan kredensial yang sudah didaftarkan, berlaku untuk Peternak dan Admin sesuai role masing-masing.
+![Home TernakKu](docs/images/home.png)
 
-3. **UC3: Kelola Profil Pengguna**: Memperbarui informasi personal pengguna (Peternak/Admin).
+### 2. 🐄 Inventaris Ternak
 
-4. **UC4: Kelola Profil Peternakan**: Peternak melengkapi dan memperbarui informasi dasar mengenai lokasi dan identitas peternakan yang dikelolanya.
+Menu Inventaris Ternak digunakan untuk mengelola data individu ternak yang dimiliki oleh peternak. Pengguna dapat melihat daftar ternak beserta informasi penting terkait masing-masing individu.
 
-5. **UC5: Kelola Data & Silsilah Ternak**: Peternak melihat daftar inventaris, menambah/mengubah profil individu hewan, serta mendata garis keturunan (induk dan pejantan).
+![Inventaris Ternak TernakKu](docs/images/inventaris-ternak.png)
 
-6. **UC6: Kelola Riwayat Kondisi & Vaksinasi**: Peternak mencatat buku log harian (kejadian lahir, sakit, dll) serta mengatur jadwal dan rekam medis vaksinasi secara spesifik.
+### 3. 📝 Catatan Harian
 
-7. **UC7: Kelola Master Data Parameter**: Admin bertugas mengelola parameter global (tipe hewan, kondisi, dan jenis vaksin bawaan sistem). Peternak juga memiliki akses ke modul ini untuk membuat parameter kustom yang khusus berlaku di peternakannya sendiri.
+Menu Catatan Harian memungkinkan peternak mencatat berbagai kejadian dan aktivitas yang terjadi di peternakan. Pencatatan dapat digunakan untuk mendokumentasikan kondisi maupun kejadian penting yang berkaitan dengan ternak.
 
----
+![Catatan Harian TernakKu](docs/images/catatan-harian.png)
 
-## ⚙️ Activity Diagram
+### 4. 💉 Riwayat Vaksinasi
 
-```mermaid
-flowchart TD
-    Start([Mulai Aktivitas]) --> CekAkun{Sudah Punya Akun?}
-    
-    CekAkun -- Belum --> Registrasi[Registrasi Akun]
-    Registrasi --> Login
-    CekAkun -- Sudah --> Login[Login ke Aplikasi]
-    
-    Login --> Dashboard[Akses Dashboard Utama]
-    
-    Dashboard --> Pilihan{Pilih Aktivitas Bisnis}
-    
-    %% Cabang 1: Pengaturan Profil & Parameter
-    Pilihan -->|Persiapan Data Awal| Master[Kelola Info Peternakan & Parameter Kustom]
-    
-    %% Cabang 2: Manajemen Inventaris
-    Pilihan -->|Kelola Inventaris| Ternak[Tambah/Ubah Profil & Silsilah Ternak]
-    
-    %% Cabang 3: Operasional Harian
-    Pilihan -->|Pencatatan Harian| Riwayat[Input Log Kondisi & Jadwal Vaksinasi]
-    
-    %% Kembali ke pusat aktivitas
-    Master --> Dashboard
-    Ternak --> Dashboard
-    Riwayat --> Dashboard
-    
-    %% Selesai
-    Pilihan -->|Selesai Bekerja| Logout[Keluar Aplikasi / Logout]
-    Logout --> Finish([Selesai])
-```
+Menu Riwayat Vaksinasi digunakan untuk mencatat dan memantau riwayat pemberian vaksin pada ternak. Fitur ini membantu peternak dalam mengetahui vaksinasi yang telah dilakukan serta mempermudah pemantauan jadwal vaksinasi berikutnya.
 
-1. **Titik Masuk (Autentikasi)**: Peternak memulai dengan mengecek apakah sudah memiliki akun. Jika belum, peternak melakukan registrasi terlebih dahulu, kemudian login ke dalam sistem.
-
-2. **Pusat Kendali (Dashboard)**: Setelah berhasil login, peternak diarahkan ke Dashboard sebagai pusat kendali untuk memilih aktivitas operasional.
-
-3. **Tiga Pilar Aktivitas Bisnis:**
-    - **Persiapan Data Awal**: Dilakukan saat pertama kali setup aplikasi. Peternak mendaftarkan lokasi peternakan dan dapat mendefinisikan tipe parameter kustom (seperti jenis kondisi atau vaksin khusus) jika template bawaan dari sistem kurang memadai.
-    - **Manajemen Inventaris**: Dilakukan ketika ada penambahan ternak baru, pembaruan identitas visual hewan, atau menautkan data silsilah (induk/pejantan) ke dalam sistem.
-    - **Pencatatan Harian**: Aktivitas operasional rutin. Peternak mencatat kondisi ternak secara aktual serta melakukan tracking rekam medis (seperti mencatat nomor batch vaksin dan menjadwalkan vaksinasi berikutnya).
-
-4. **Siklus Berulang**: etelah menyelesaikan satu tugas, peternak kembali ke Dashboard untuk melanjutkan tugas lain atau memilih keluar (logout) jika seluruh pekerjaan selesai.
-
-## 🗄️ Entity Relationship Diagram (ERD)
-
-![Entity Reational Database](/docs/images/erd.png)
-
-1. **Autentikasi & Hak Akses (`users`, `roles`)**
-    - **Fitur Registrasi & Login**: Diakomodasi penuh dalam tabel `users` melalui atribut kredensial (`email`, `password`). Alur keamanan dan validasi menggunakan atribut `otp_code`, `otp_expiration`, dan `is_verified`.
-    - **Pemisahan Wewenang**: Atribut `role_id` pada tabel pengguna terhubung ke tabel referensi `roles`, berfungsi membedakan antarmuka dan hak akses antara Admin (pengelola sistem) dan Peternak (pengguna akhir).
-
-2. **Manajemen Profil Peternakan (`farms`)**
-    - **Kepemilikan Tunggal**: Atribut `user_id` pada tabel `farms` menggunakan *constraint* `[unique, not null]` sehingga satu pengguna hanya dapat mengelola satu peternakan.
-
-    - **Pemetaan Lokasi**: Fitur peta spasial (Google Maps/Leaflet) didukung oleh atribut `latitude` dan `longitude`.
-
-3. **Inventaris & Silsilah Ternak (`livestocks`)**
-    - **Identifikasi Fleksibel**: Melalui atribut `tag_id`, `name`, dan `picture`, aplikasi tetap relevan bagi peternak berskala kecil yang mengidentifikasi hewan menggunakan nama/ciri fisik maupun peternak besar yang menggunakan nomor anting (*ear tag*).
-    - **Pelacakan Garis Keturunan**: Fitur silsilah atau genetika diimplementasikan dengan atribut `father_id` dan `mother_id` yang merujuk kembali ke ID utama di tabel `livestocks` yang sama.
-
-4. **Arsitektur Master Data Dinamis (`animal_types`, `condition_types`, `vaccines`)**
-    - **Pola Desain Template**: Jika `farm_id` bernilai `null`, maka data tersebut berfungsi sebagai template global bawaan yang dibuat oleh Admin. Jika `farm_id` terisi, maka itu adalah kategori kustom yang dibuat mandiri oleh suatu peternakan.
-    - **Integritas Kode Data**: Implementasi *Composite Unique Key* pada blok *indexes* `{ (code, farm_id) [unique] }` memastikan peternak bebas membuat kode (`code`) kustom tanpa memicu bentrok dengan kode dari peternak lain, namun tetap mempertahankan keunikan di dalam peternakannya sendiri.
-
-5. **Pencatatan Operasional Harian (`condition_histories`, `vaccination_histories`)**
-    - **Kondisi Umum (`condition_histories`)**: Berfungsi sebagai *logbook*. Menghubungkan hewan terkait (`livestock_id`) dengan kejadian spesifik (`condition_type_id`) berdasarkan tanggal kejadian aktual (`record_date`) dan dilengkapi catatan tambahan (`notes`).
-    - **Rekam Medis Khusus (`vaccination_histories`)**: Dipisahkan dari tabel kondisi umum untuk melacak atribut medis khusus, seperti `batch_number`. Peternak dapat melacak nomor seri vaksin tertentu yang disuntikkan jika sewaktu-waktu terjadi wabah atau efek samping. Selain itu, peternak dapat menjadwalkan vaksinasi (`vaccination_date`) dan menandai status apakah sudah divaksinasi atau belum (`is_vaccinated`).
+![Riwayat Vaksinasi TernakKu](docs/images/riwayat-vaksinasi.png)
